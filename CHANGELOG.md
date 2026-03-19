@@ -7,6 +7,29 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- `CODE_OF_CONDUCT.md` — Contributor Covenant 2.1
+- `SECURITY.md` — private vulnerability reporting via GitHub Security Advisories
+- `.github/CODEOWNERS` — all PRs auto-assigned to @phlx0
+- `.github/dependabot.yml` — weekly automated updates for GitHub Actions and Go modules
+- CI: `windows-latest` added to the test matrix
+- CI: `go mod tidy` check to catch uncommitted go.sum drift
+- Release: `go test -race` step runs before GoReleaser to gate broken releases
+
+### Changed
+
+- `CONTRIBUTING.md` — expanded with Conventional Commits format, branch naming conventions, and type reference table
+- CI: push trigger narrowed to `main` only (PRs remain covered by `pull_request`)
+- CI: lint job now derives Go version from `go.mod` instead of a hardcoded value
+- CI: `golangci-lint` pinned to `v1.64.0` instead of floating `latest`
+- CI: coverage upload targets Go `1.24` (latest in matrix)
+- Release: `goreleaser-action` pinned to `v6.3.0`
+
+---
+
 ## [0.1.0] — 2026-03-19
 
 First public release.

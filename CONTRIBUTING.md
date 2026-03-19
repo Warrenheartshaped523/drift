@@ -8,6 +8,7 @@ Thank you for considering a contribution to drift. Here's everything you need to
 
 - [Development setup](#development-setup)
 - [Project structure](#project-structure)
+- [Branches and commits](#branches-and-commits)
 - [Adding a new scene](#adding-a-new-scene)
 - [Adding a new theme](#adding-a-new-theme)
 - [Code style](#code-style)
@@ -64,6 +65,64 @@ drift/
 
 ---
 
+## Branches and commits
+
+This project follows [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+### Commit messages
+
+Format: `<type>(<scope>): <description>`
+
+The `scope` is optional but encouraged. Keep the description short and in the imperative mood ("add", not "added" or "adds").
+
+**Types:**
+
+| Type | When to use |
+|------|-------------|
+| `feat` | A new feature or scene or theme |
+| `fix` | A bug fix |
+| `docs` | Documentation only changes |
+| `refactor` | Code change that neither fixes a bug nor adds a feature |
+| `test` | Adding or updating tests |
+| `chore` | Build process, CI, dependency updates |
+| `perf` | Performance improvements |
+
+**Examples:**
+
+```
+feat(scene): add aurora scene
+feat(theme): add tokyo-night theme
+fix(rain): prevent panic on zero-width terminal
+docs: improve contributing guide
+refactor(engine): simplify render loop timing
+test(scene): add theme palette length assertions
+chore(ci): add windows to test matrix
+```
+
+For breaking changes, append `!` after the type and add a `BREAKING CHANGE:` footer:
+
+```
+feat!: remove --fps flag in favour of config file
+
+BREAKING CHANGE: --fps CLI flag is no longer supported, set engine.fps in the config file instead.
+```
+
+### Branch names
+
+Use the format `<type>/<short-description>`, matching the commit type:
+
+```
+feat/aurora-scene
+feat/tokyo-night-theme
+fix/rain-zero-width-panic
+docs/contributing-conventions
+chore/ci-windows-matrix
+```
+
+Branch off `main`. Do not commit directly to `main`.
+
+---
+
 ## Adding a new scene
 
 1. Create `internal/scene/myscene.go` with `package scene`.
@@ -105,8 +164,8 @@ drift/
 
 - **`Init` must be idempotent** — it is called again on every `Resize`.
 - **`Draw` must not call `screen.Show()`** — the engine flushes once per frame.
-- **Delta time**: `Update(dt float64)` receives seconds since last frame, capped at 100 ms by the engine.  Use `dt` for all time-based motion.
-- **Respect terminal color** — always use `tcell.StyleDefault` as the base and only override the foreground.  Never hardcode a background color.
+- **Delta time**: `Update(dt float64)` receives seconds since last frame, capped at 100 ms by the engine. Use `dt` for all time-based motion.
+- **Respect terminal color** — always use `tcell.StyleDefault` as the base and only override the foreground. Never hardcode a background color.
 - **Handle all terminal sizes gracefully**, including very narrow (< 40 columns) or very short (< 10 rows) terminals.
 
 ---
@@ -135,6 +194,8 @@ Open `internal/scene/scene.go` and add an entry to the `Themes` map:
 },
 ```
 
+Also update the theme comment in `internal/config/config.go` to include your theme name in the inline list.
+
 Run `./drift list themes` to confirm it appears.
 
 ---
@@ -143,7 +204,7 @@ Run `./drift list themes` to confirm it appears.
 
 - Standard `gofmt` / `goimports` formatting.
 - No external linters beyond `go vet` are required, but PRs must pass the CI lint step.
-- Keep files focused.  If a scene file grows beyond ~300 lines, consider splitting helpers.
+- Keep files focused. If a scene file grows beyond ~300 lines, consider splitting helpers.
 - Exported symbols need doc comments; unexported helpers are optional.
 
 ---
@@ -167,13 +228,14 @@ For automated tests, prefer testing pure functions (math helpers, config parsing
 
 ## Submitting a pull request
 
-1. Fork the repo and create a branch off `main`.
-2. Keep commits focused — one logical change per commit.
-3. Run `make test` and `go vet ./...` before opening the PR.
-4. Fill in the PR description template.
-5. Screenshots or terminal recordings of new scenes / visual changes are very welcome.
+1. Fork the repo and create a branch off `main` using the naming convention above.
+2. Write commits following the Conventional Commits format.
+3. Keep commits focused — one logical change per commit.
+4. Run `make test` and `go vet ./...` before opening the PR.
+5. Fill in the PR description template.
+6. Screenshots or terminal recordings of new scenes / visual changes are very welcome.
 
-We review PRs as time allows.  Patience is appreciated.
+We review PRs as time allows. Patience is appreciated.
 
 ---
 
