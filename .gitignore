@@ -1,0 +1,17 @@
+# Binary
+drift
+drift.exe
+
+# Go build cache
+*.test
+*.out
+
+# Editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# goreleaser dist
+dist/

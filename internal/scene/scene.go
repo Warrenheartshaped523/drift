@@ -1,0 +1,263 @@
+// Package scene defines the Scene interface and shared types used by all
+// drift animations.
+package scene
+
+import (
+	"github.com/gdamore/tcell/v2"
+)
+
+// Scene is the interface every drift animation must implement.
+// The engine calls methods in order: Init → (Update → Draw)* → Resize → …
+type Scene interface {
+	// Name returns the unique scene identifier used in flags and config.
+	Name() string
+
+	// Init initialises the scene for the given terminal dimensions and theme.
+	// Called once when the scene becomes active and after every Resize.
+	Init(w, h int, t Theme)
+
+	// Update advances the simulation by dt seconds.
+	// Must be safe to call at any frame rate.
+	Update(dt float64)
+
+	// Draw renders the current state onto the screen.
+	// Draw must NOT call screen.Show() — the engine owns flushing.
+	Draw(screen tcell.Screen)
+
+	// Resize is called when the terminal dimensions change mid-life.
+	Resize(w, h int)
+}
+
+// All returns one fresh instance of every built-in scene.
+func All() []Scene {
+	return []Scene{
+		NewConstellation(),
+		NewRain(),
+		NewParticles(),
+		NewWaveform(),
+	}
+}
+
+// ByName returns the scene with the given name, or nil.
+func ByName(name string) Scene {
+	for _, s := range All() {
+		if s.Name() == name {
+			return s
+		}
+	}
+	return nil
+}
+
+// Names returns the names of all available scenes.
+func Names() []string {
+	all := All()
+	names := make([]string, len(all))
+	for i, s := range all {
+		names[i] = s.Name()
+	}
+	return names
+}
+
+// ----------------------------------------------------------------------------
+// Color helpers
+// ----------------------------------------------------------------------------
+
+// RGBColor is a 24-bit true-color value.
+type RGBColor struct{ R, G, B uint8 }
+
+// Tcell converts to tcell.Color (true-color if supported, otherwise degraded
+// automatically by tcell).
+func (c RGBColor) Tcell() tcell.Color {
+	return tcell.NewRGBColor(int32(c.R), int32(c.G), int32(c.B))
+}
+
+// Style returns a tcell.Style with this color as foreground and the
+// terminal's default background.
+func (c RGBColor) Style() tcell.Style {
+	return tcell.StyleDefault.Foreground(c.Tcell())
+}
+
+// Lerp linearly interpolates between two RGBColors, clamping t to [0, 1].
+func Lerp(a, b RGBColor, t float64) RGBColor {
+	if t < 0 {
+		t = 0
+	}
+	if t > 1 {
+		t = 1
+	}
+	return RGBColor{
+		R: uint8(float64(a.R)*(1-t) + float64(b.R)*t),
+		G: uint8(float64(a.G)*(1-t) + float64(b.G)*t),
+		B: uint8(float64(a.B)*(1-t) + float64(b.B)*t),
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Theme
+// ----------------------------------------------------------------------------
+
+// Theme holds the color palette for a scene.
+type Theme struct {
+	Name    string
+	// Palette is an ordered slice of accent colors.
+	// Scenes use Palette[i % len(Palette)] to stay in-bounds.
+	Palette []RGBColor
+	// Dim mirrors Palette with darker / more muted variants for trails and
+	// depth effects.
+	Dim     []RGBColor
+	// Bright is used for highlights (star centers, raindrop heads, etc.).
+	Bright  RGBColor
+}
+
+// Themes is the registry of all built-in color themes.
+var Themes = map[string]Theme{
+	"cosmic": {
+		Name: "cosmic",
+		Palette: []RGBColor{
+			{100, 140, 230},
+			{160, 100, 220},
+			{80, 200, 220},
+			{180, 140, 255},
+		},
+		Dim: []RGBColor{
+			{25, 35, 70},
+			{40, 22, 60},
+			{18, 50, 60},
+			{45, 30, 70},
+		},
+		Bright: RGBColor{230, 235, 255},
+	},
+	"nord": {
+		Name: "nord",
+		Palette: []RGBColor{
+			{136, 192, 208},
+			{129, 161, 193},
+			{143, 188, 187},
+			{163, 190, 140},
+		},
+		Dim: []RGBColor{
+			{46, 52, 64},
+			{59, 66, 82},
+			{67, 76, 94},
+			{76, 86, 106},
+		},
+		Bright: RGBColor{236, 239, 244},
+	},
+	"dracula": {
+		Name: "dracula",
+		Palette: []RGBColor{
+			{189, 147, 249},
+			{255, 121, 198},
+			{139, 233, 253},
+			{80, 250, 123},
+		},
+		Dim: []RGBColor{
+			{48, 34, 78},
+			{68, 28, 52},
+			{32, 58, 68},
+			{18, 62, 32},
+		},
+		Bright: RGBColor{248, 248, 242},
+	},
+	"catppuccin": {
+		Name: "catppuccin",
+		Palette: []RGBColor{
+			{203, 166, 247},
+			{137, 180, 250},
+			{116, 199, 236},
+			{166, 227, 161},
+		},
+		Dim: []RGBColor{
+			{49, 35, 62},
+			{33, 46, 70},
+			{28, 51, 60},
+			{40, 58, 40},
+		},
+		Bright: RGBColor{205, 214, 244},
+	},
+	"gruvbox": {
+		Name: "gruvbox",
+		Palette: []RGBColor{
+			{251, 189, 35},
+			{184, 187, 38},
+			{214, 93, 14},
+			{104, 157, 106},
+		},
+		Dim: []RGBColor{
+			{58, 44, 8},
+			{44, 46, 10},
+			{50, 22, 4},
+			{26, 38, 24},
+		},
+		Bright: RGBColor{235, 219, 178},
+	},
+	"forest": {
+		Name: "forest",
+		Palette: []RGBColor{
+			{80, 200, 90},
+			{60, 160, 100},
+			{160, 220, 80},
+			{40, 180, 140},
+		},
+		Dim: []RGBColor{
+			{14, 38, 16},
+			{12, 30, 20},
+			{33, 48, 14},
+			{10, 38, 28},
+		},
+		Bright: RGBColor{200, 240, 180},
+	},
+	"mono": {
+		Name: "mono",
+		Palette: []RGBColor{
+			{0, 200, 80},
+			{0, 170, 65},
+			{0, 230, 95},
+			{0, 150, 55},
+		},
+		Dim: []RGBColor{
+			{0, 38, 14},
+			{0, 28, 11},
+			{0, 46, 16},
+			{0, 24, 9},
+		},
+		Bright: RGBColor{180, 255, 200},
+	},
+}
+
+// ThemeNames returns the names of all built-in themes.
+func ThemeNames() []string {
+	names := make([]string, 0, len(Themes))
+	for k := range Themes {
+		names = append(names, k)
+	}
+	return names
+}
+
+// ----------------------------------------------------------------------------
+// Small math helpers shared across scene files
+// ----------------------------------------------------------------------------
+
+func absInt(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
+func clamp64(v, lo, hi float64) float64 {
+	if v < lo {
+		return lo
+	}
+	if v > hi {
+		return hi
+	}
+	return v
+}
+
+func minInt(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}

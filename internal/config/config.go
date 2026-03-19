@@ -1,0 +1,214 @@
+// Package config handles loading and merging drift configuration.
+// Defaults are compiled in; a TOML file at XDG_CONFIG_HOME/drift/config.toml
+// is merged on top when present.
+package config
+
+import (
+	"os"
+	"path/filepath"
+
+	"github.com/BurntSushi/toml"
+)
+
+// Config is the top-level configuration structure.
+type Config struct {
+	Idle   IdleConfig   `toml:"idle"`
+	Engine EngineConfig `toml:"engine"`
+	Scene  SceneConfig  `toml:"scene"`
+}
+
+// IdleConfig controls the built-in idle timer.
+// When using shell integration the shell handles idle detection;
+// these values serve as a reference for what to set in TMOUT / DRIFT_TIMEOUT.
+type IdleConfig struct {
+	// Timeout is seconds of inactivity before drift activates (standalone mode).
+	Timeout int `toml:"timeout"`
+}
+
+// EngineConfig controls the render engine.
+type EngineConfig struct {
+	// FPS is the target render frame rate. Default: 30.
+	FPS int `toml:"fps"`
+	// CycleSeconds is how long to show each scene before cycling to the next.
+	// Set to 0 to disable scene cycling (stay on one scene forever).
+	CycleSeconds float64 `toml:"cycle_seconds"`
+	// Scenes is a comma-separated list of scene names to include in the cycle.
+	// Use "all" or leave empty to enable all scenes.
+	Scenes string `toml:"scenes"`
+	// Theme is the name of the color theme. Built-in themes:
+	// cosmic, nord, dracula, catppuccin, gruvbox, forest, mono
+	Theme string `toml:"theme"`
+	// Shuffle randomises scene order when cycling.
+	Shuffle bool `toml:"shuffle"`
+}
+
+// SceneConfig holds per-scene tuning knobs.
+type SceneConfig struct {
+	Constellation ConstellationConfig `toml:"constellation"`
+	Rain          RainConfig          `toml:"rain"`
+	Particles     ParticlesConfig     `toml:"particles"`
+	Waveform      WaveformConfig      `toml:"waveform"`
+}
+
+// ConstellationConfig configures the constellation scene.
+type ConstellationConfig struct {
+	StarCount      int     `toml:"star_count"`
+	ConnectRadius  float64 `toml:"connect_radius"`  // fraction of screen diagonal
+	Twinkle        bool    `toml:"twinkle"`
+	MaxConnections int     `toml:"max_connections"` // per star
+}
+
+// RainConfig configures the rain scene.
+type RainConfig struct {
+	Charset string  `toml:"charset"`
+	Density float64 `toml:"density"` // 0.0–1.0
+	Speed   float64 `toml:"speed"`   // multiplier
+}
+
+// ParticlesConfig configures the particle scene.
+type ParticlesConfig struct {
+	Count    int     `toml:"count"`
+	Gravity  float64 `toml:"gravity"`
+	Friction float64 `toml:"friction"`
+}
+
+// WaveformConfig configures the waveform scene.
+type WaveformConfig struct {
+	Layers    int     `toml:"layers"`
+	Amplitude float64 `toml:"amplitude"` // 0.0–1.0
+	Speed     float64 `toml:"speed"`     // multiplier
+}
+
+// Default returns sensible compiled-in defaults.
+func Default() *Config {
+	return &Config{
+		Idle: IdleConfig{
+			Timeout: 120,
+		},
+		Engine: EngineConfig{
+			FPS:          30,
+			CycleSeconds: 60,
+			Scenes:       "all",
+			Theme:        "cosmic",
+			Shuffle:      true,
+		},
+		Scene: SceneConfig{
+			Constellation: ConstellationConfig{
+				StarCount:      80,
+				ConnectRadius:  0.18,
+				Twinkle:        true,
+				MaxConnections: 4,
+			},
+			Rain: RainConfig{
+				Charset: "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ0123456789",
+				Density: 0.4,
+				Speed:   1.0,
+			},
+			Particles: ParticlesConfig{
+				Count:    120,
+				Gravity:  0.0,
+				Friction: 0.98,
+			},
+			Waveform: WaveformConfig{
+				Layers:    3,
+				Amplitude: 0.70,
+				Speed:     1.0,
+			},
+		},
+	}
+}
+
+// Load reads the config file from the XDG config directory and merges it with
+// compiled-in defaults.  Missing keys in the file retain their default values.
+// If no file exists Load succeeds and returns the defaults.
+func Load() (*Config, error) {
+	cfg := Default()
+
+	path, err := Path()
+	if err != nil {
+		return cfg, nil
+	}
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return cfg, nil
+	}
+
+	if _, err := toml.DecodeFile(path, cfg); err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
+}
+
+// Path returns the filesystem path to the config file.
+// Respects XDG_CONFIG_HOME; falls back to ~/.config on all platforms.
+func Path() (string, error) {
+	base := os.Getenv("XDG_CONFIG_HOME")
+	if base == "" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		base = filepath.Join(home, ".config")
+	}
+	return filepath.Join(base, "drift", "config.toml"), nil
+}
+
+// WriteDefault writes the default config to the config path, creating
+// directories as needed.  Useful for `drift config --init`.
+func WriteDefault() error {
+	path, err := Path()
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return err
+	}
+
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o644)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.WriteString(defaultTOML)
+	return err
+}
+
+const defaultTOML = `# drift configuration
+# Generated by: drift config --init
+# Full documentation: https://github.com/phlx0/drift
+
+[idle]
+# Seconds of inactivity before drift activates (standalone mode).
+# Shell integration uses TMOUT / DRIFT_TIMEOUT instead.
+timeout = 120
+
+[engine]
+fps           = 30     # target frames per second
+cycle_seconds = 60     # seconds per scene, 0 = stay on one scene
+scenes        = "all"  # comma-separated list or "all"
+theme         = "cosmic" # cosmic | nord | dracula | catppuccin | gruvbox | forest | mono
+shuffle       = true   # randomise scene order
+
+[scene.constellation]
+star_count      = 80
+connect_radius  = 0.18  # fraction of screen diagonal
+twinkle         = true
+max_connections = 4     # max connections per star
+
+[scene.rain]
+charset = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ0123456789"
+density = 0.4
+speed   = 1.0
+
+[scene.particles]
+count    = 120
+gravity  = 0.0
+friction = 0.98
+
+[scene.waveform]
+layers    = 3
+amplitude = 0.70
+speed     = 1.0
+`
