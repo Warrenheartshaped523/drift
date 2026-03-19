@@ -8,14 +8,8 @@ linters:
     - ineffassign
     - typecheck
 
-linters-settings:
-  errcheck:
-    # screen.SetContent returns nothing; tcell calls are safe to ignore
-    ignore: github.com/gdamore/tcell/v2:.*
-
 issues:
   exclude-rules:
-    # Test files can use unsafe patterns
     - path: _test\.go
       linters:
         - errcheck
