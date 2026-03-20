@@ -9,6 +9,10 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **CLI**: `--duration` flag now uses cobra's `Changed()` API instead of a `-1` sentinel to detect explicit user input; flag default changed from `-1` to `0`
+
 ---
 
 ## [0.3.0] — 2026-03-20
