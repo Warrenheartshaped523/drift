@@ -63,10 +63,14 @@ drift ships six animations. They cycle automatically or you can lock to one.
 <tr>
 <td width="50%">
 
+**pipes** — box-drawing pipes snake across the screen and wrap at the edges
+
 <img src="demo/pipes.gif" width="100%" />
 
 </td>
 <td width="50%">
+
+**maze** — a perfect maze builds itself, holds, then dissolves and regenerates
 
 <img src="demo/maze.gif" width="100%" />
 
