@@ -66,7 +66,7 @@ func init() {
 	f.StringVarP(&flagTheme, "theme", "t", "", "color theme (overrides config)")
 	f.StringVarP(&flagScene, "scene", "s", "", "lock to a specific scene (overrides config)")
 	f.IntVar(&flagFPS, "fps", 0, "target frame rate in Hz (overrides config)")
-	f.Float64Var(&flagDuration, "duration", -1, "seconds per scene when cycling, 0 = no cycling (overrides config)")
+	f.Float64Var(&flagDuration, "duration", 0, "seconds per scene when cycling, 0 = no cycling (overrides config)")
 
 	rootCmd.AddCommand(shellInitCmd)
 	rootCmd.AddCommand(listCmd)
@@ -92,7 +92,7 @@ func runEngine(cmd *cobra.Command, _ []string) error {
 	if flagFPS > 0 {
 		cfg.Engine.FPS = flagFPS
 	}
-	if flagDuration >= 0 {
+	if cmd.Flags().Changed("duration") {
 		cfg.Engine.CycleSeconds = flagDuration
 	}
 
