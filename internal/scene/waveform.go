@@ -6,8 +6,7 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
-// brailleOffsets[row][col] gives the Unicode bit offset for the dot at
-// (col, row) inside a braille cell (col ∈ {0,1}, row ∈ {0,1,2,3}).
+// brailleOffsets maps (row, col) inside a braille cell to its Unicode bit offset.
 //
 // Unicode braille bit layout (U+2800 base):
 //
@@ -25,17 +24,17 @@ var brailleOffsets = [4][2]uint{
 
 // waveLayer is one sine wave in the stack.
 type waveLayer struct {
-	freq  float64  // spatial cycles across the full width
-	amp   float64  // base amplitude in pixels (not characters)
-	speed float64  // radians per second (positive = rightward)
-	phase float64  // initial phase offset (radians)
+	freq  float64 // spatial cycles across the full width
+	amp   float64 // amplitude in pixels (not characters)
+	speed float64 // radians per second (positive = rightward)
+	phase float64 // initial phase offset (radians)
 	color RGBColor
 }
 
 // Waveform renders multiple breathing sine waves using braille Unicode
-// characters for sub-character precision, giving smooth, animated curves.
+// characters for sub-character precision (2×4 dots per terminal cell).
 type Waveform struct {
-	w, h int
+	w, h  int
 	theme Theme
 
 	// Pixel resolution: pw = w*2, ph = h*4
@@ -48,7 +47,6 @@ type Waveform struct {
 	time float64
 }
 
-// NewWaveform returns a fresh Waveform scene.
 func NewWaveform() *Waveform { return &Waveform{} }
 
 func (wf *Waveform) Name() string { return "waveform" }
@@ -59,7 +57,7 @@ func (wf *Waveform) Init(w, h int, t Theme) {
 	wf.pw, wf.ph = w*2, h*4
 	wf.allocPixels()
 
-	baseAmp := float64(wf.ph) * 0.22 // ~22% of screen height in pixels
+	baseAmp := float64(wf.ph) * 0.22
 	wf.layers = []waveLayer{
 		{
 			freq:  2.0,
@@ -115,7 +113,6 @@ func (wf *Waveform) Update(dt float64) {
 }
 
 func (wf *Waveform) Draw(screen tcell.Screen) {
-	// Clear pixel buffer.
 	for px := range wf.pixels {
 		for py := range wf.pixels[px] {
 			wf.pixels[px][py] = 0
@@ -124,18 +121,16 @@ func (wf *Waveform) Draw(screen tcell.Screen) {
 
 	centerPY := wf.ph / 2
 
-	// Paint each wave layer into the pixel buffer.
 	for li, layer := range wf.layers {
-		// Breathing: amplitude slowly oscillates.
+		// Amplitude breathes slowly over time.
 		breathe := 0.72 + 0.28*math.Sin(wf.time*0.38+float64(li)*1.1)
 		amp := layer.amp * breathe
 
 		for px := 0; px < wf.pw; px++ {
-			// Map pixel column to [0, 1] and evaluate sine.
 			fx := float64(px) / float64(wf.pw)
 			py := centerPY + int(amp*math.Sin(fx*layer.freq*2*math.Pi+layer.phase+wf.time*layer.speed))
 
-			// Draw 2-pixel thick line for visibility.
+			// 2-pixel thick line for visibility at small amplitudes.
 			for offset := 0; offset <= 1; offset++ {
 				yy := py + offset
 				if yy >= 0 && yy < wf.ph {
@@ -145,11 +140,11 @@ func (wf *Waveform) Draw(screen tcell.Screen) {
 		}
 	}
 
-	// Convert pixel buffer → braille cells → screen.
+	// Convert pixel buffer → braille characters → screen.
 	for cx := 0; cx < wf.w; cx++ {
 		for cy := 0; cy < wf.h; cy++ {
 			var mask uint8
-			// waveCounts[li] = number of bits set by layer li in this cell.
+			// waveCounts[li] = dots contributed by layer li in this cell.
 			var waveCounts [3]int
 
 			for subRow := 0; subRow < 4; subRow++ {
@@ -175,7 +170,7 @@ func (wf *Waveform) Draw(screen tcell.Screen) {
 				continue
 			}
 
-			// Choose color from the wave that contributed the most bits.
+			// Color from the wave that contributed the most dots.
 			bestWave := 0
 			for li := 1; li < len(wf.layers); li++ {
 				if waveCounts[li] > waveCounts[bestWave] {
@@ -184,7 +179,6 @@ func (wf *Waveform) Draw(screen tcell.Screen) {
 			}
 
 			color := wf.layers[bestWave].color
-			// Add a slight brightness boost toward Bright based on density.
 			totalBits := waveCounts[0] + waveCounts[1] + waveCounts[2]
 			if totalBits > 0 {
 				boost := clamp64(float64(totalBits)/8.0, 0, 1) * 0.35

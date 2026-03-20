@@ -1,6 +1,6 @@
 # Binary
-drift
-drift.exe
+/drift
+/drift.exe
 
 # Go build cache
 *.test

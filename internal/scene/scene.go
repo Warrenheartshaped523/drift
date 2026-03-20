@@ -9,26 +9,22 @@ import (
 // Scene is the interface every drift animation must implement.
 // The engine calls methods in order: Init → (Update → Draw)* → Resize → …
 type Scene interface {
-	// Name returns the unique scene identifier used in flags and config.
 	Name() string
 
 	// Init initialises the scene for the given terminal dimensions and theme.
-	// Called once when the scene becomes active and after every Resize.
+	// Called once when the scene becomes active and again after every Resize.
 	Init(w, h int, t Theme)
 
 	// Update advances the simulation by dt seconds.
-	// Must be safe to call at any frame rate.
 	Update(dt float64)
 
 	// Draw renders the current state onto the screen.
-	// Draw must NOT call screen.Show() — the engine owns flushing.
+	// Must NOT call screen.Show() — the engine owns flushing.
 	Draw(screen tcell.Screen)
 
-	// Resize is called when the terminal dimensions change mid-life.
 	Resize(w, h int)
 }
 
-// All returns one fresh instance of every built-in scene.
 func All() []Scene {
 	return []Scene{
 		NewConstellation(),
@@ -38,7 +34,6 @@ func All() []Scene {
 	}
 }
 
-// ByName returns the scene with the given name, or nil.
 func ByName(name string) Scene {
 	for _, s := range All() {
 		if s.Name() == name {
@@ -48,7 +43,6 @@ func ByName(name string) Scene {
 	return nil
 }
 
-// Names returns the names of all available scenes.
 func Names() []string {
 	all := All()
 	names := make([]string, len(all))
@@ -58,21 +52,17 @@ func Names() []string {
 	return names
 }
 
-// ----------------------------------------------------------------------------
-// Color helpers
-// ----------------------------------------------------------------------------
-
 // RGBColor is a 24-bit true-color value.
 type RGBColor struct{ R, G, B uint8 }
 
-// Tcell converts to tcell.Color (true-color if supported, otherwise degraded
-// automatically by tcell).
+// Tcell converts to tcell.Color, degrading automatically on terminals that
+// don't support true color.
 func (c RGBColor) Tcell() tcell.Color {
 	return tcell.NewRGBColor(int32(c.R), int32(c.G), int32(c.B))
 }
 
 // Style returns a tcell.Style with this color as foreground and the
-// terminal's default background.
+// terminal's default background (never hardcodes a background color).
 func (c RGBColor) Style() tcell.Style {
 	return tcell.StyleDefault.Foreground(c.Tcell())
 }
@@ -92,24 +82,18 @@ func Lerp(a, b RGBColor, t float64) RGBColor {
 	}
 }
 
-// ----------------------------------------------------------------------------
-// Theme
-// ----------------------------------------------------------------------------
-
 // Theme holds the color palette for a scene.
 type Theme struct {
-	Name    string
-	// Palette is an ordered slice of accent colors.
-	// Scenes use Palette[i % len(Palette)] to stay in-bounds.
+	Name string
+	// Palette is the main accent colors. Scenes index with Palette[i % len(Palette)].
 	Palette []RGBColor
-	// Dim mirrors Palette with darker / more muted variants for trails and
-	// depth effects.
-	Dim     []RGBColor
-	// Bright is used for highlights (star centers, raindrop heads, etc.).
-	Bright  RGBColor
+	// Dim mirrors Palette with darker variants for trails and depth.
+	// Always the same length as Palette.
+	Dim []RGBColor
+	// Bright is a near-white highlight for peaks and heads.
+	Bright RGBColor
 }
 
-// Themes is the registry of all built-in color themes.
 var Themes = map[string]Theme{
 	"cosmic": {
 		Name: "cosmic",
@@ -225,7 +209,6 @@ var Themes = map[string]Theme{
 	},
 }
 
-// ThemeNames returns the names of all built-in themes.
 func ThemeNames() []string {
 	names := make([]string, 0, len(Themes))
 	for k := range Themes {
@@ -233,10 +216,6 @@ func ThemeNames() []string {
 	}
 	return names
 }
-
-// ----------------------------------------------------------------------------
-// Small math helpers shared across scene files
-// ----------------------------------------------------------------------------
 
 func absInt(x int) int {
 	if x < 0 {
@@ -254,4 +233,3 @@ func clamp64(v, lo, hi float64) float64 {
 	}
 	return v
 }
-

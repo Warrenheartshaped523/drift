@@ -10,7 +10,6 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-// Config is the top-level configuration structure.
 type Config struct {
 	Idle   IdleConfig   `toml:"idle"`
 	Engine EngineConfig `toml:"engine"`
@@ -21,28 +20,19 @@ type Config struct {
 // When using shell integration the shell handles idle detection;
 // these values serve as a reference for what to set in TMOUT / DRIFT_TIMEOUT.
 type IdleConfig struct {
-	// Timeout is seconds of inactivity before drift activates (standalone mode).
 	Timeout int `toml:"timeout"`
 }
 
-// EngineConfig controls the render engine.
 type EngineConfig struct {
-	// FPS is the target render frame rate. Default: 30.
 	FPS int `toml:"fps"`
-	// CycleSeconds is how long to show each scene before cycling to the next.
-	// Set to 0 to disable scene cycling (stay on one scene forever).
+	// CycleSeconds is how long to show each scene before cycling. 0 disables cycling.
 	CycleSeconds float64 `toml:"cycle_seconds"`
-	// Scenes is a comma-separated list of scene names to include in the cycle.
-	// Use "all" or leave empty to enable all scenes.
-	Scenes string `toml:"scenes"`
-	// Theme is the name of the color theme. Built-in themes:
-	// cosmic, nord, dracula, catppuccin, gruvbox, forest, mono
-	Theme string `toml:"theme"`
-	// Shuffle randomises scene order when cycling.
-	Shuffle bool `toml:"shuffle"`
+	// Scenes is a comma-separated list of scene names, or "all".
+	Scenes  string `toml:"scenes"`
+	Theme   string `toml:"theme"`
+	Shuffle bool   `toml:"shuffle"`
 }
 
-// SceneConfig holds per-scene tuning knobs.
 type SceneConfig struct {
 	Constellation ConstellationConfig `toml:"constellation"`
 	Rain          RainConfig          `toml:"rain"`
@@ -50,7 +40,6 @@ type SceneConfig struct {
 	Waveform      WaveformConfig      `toml:"waveform"`
 }
 
-// ConstellationConfig configures the constellation scene.
 type ConstellationConfig struct {
 	StarCount      int     `toml:"star_count"`
 	ConnectRadius  float64 `toml:"connect_radius"`  // fraction of screen diagonal
@@ -58,28 +47,24 @@ type ConstellationConfig struct {
 	MaxConnections int     `toml:"max_connections"` // per star
 }
 
-// RainConfig configures the rain scene.
 type RainConfig struct {
 	Charset string  `toml:"charset"`
 	Density float64 `toml:"density"` // 0.0–1.0
 	Speed   float64 `toml:"speed"`   // multiplier
 }
 
-// ParticlesConfig configures the particle scene.
 type ParticlesConfig struct {
 	Count    int     `toml:"count"`
 	Gravity  float64 `toml:"gravity"`
 	Friction float64 `toml:"friction"`
 }
 
-// WaveformConfig configures the waveform scene.
 type WaveformConfig struct {
 	Layers    int     `toml:"layers"`
 	Amplitude float64 `toml:"amplitude"` // 0.0–1.0
 	Speed     float64 `toml:"speed"`     // multiplier
 }
 
-// Default returns sensible compiled-in defaults.
 func Default() *Config {
 	return &Config{
 		Idle: IdleConfig{
@@ -118,9 +103,8 @@ func Default() *Config {
 	}
 }
 
-// Load reads the config file from the XDG config directory and merges it with
-// compiled-in defaults.  Missing keys in the file retain their default values.
-// If no file exists Load succeeds and returns the defaults.
+// Load reads the config file and merges it with compiled-in defaults.
+// Missing keys retain their default values. Returns defaults if no file exists.
 func Load() (*Config, error) {
 	cfg := Default()
 
@@ -140,8 +124,7 @@ func Load() (*Config, error) {
 	return cfg, nil
 }
 
-// Path returns the filesystem path to the config file.
-// Respects XDG_CONFIG_HOME; falls back to ~/.config on all platforms.
+// Path returns the config file path, respecting XDG_CONFIG_HOME.
 func Path() (string, error) {
 	base := os.Getenv("XDG_CONFIG_HOME")
 	if base == "" {
@@ -154,8 +137,8 @@ func Path() (string, error) {
 	return filepath.Join(base, "drift", "config.toml"), nil
 }
 
-// WriteDefault writes the default config to the config path, creating
-// directories as needed.  Useful for `drift config --init`.
+// WriteDefault writes the default config, creating directories as needed.
+// Uses O_EXCL so it never overwrites an existing file.
 func WriteDefault() error {
 	path, err := Path()
 	if err != nil {

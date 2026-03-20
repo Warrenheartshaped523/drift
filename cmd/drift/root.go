@@ -26,12 +26,10 @@ func SetBuildInfo(version, commit, date string) {
 	buildDate = date
 }
 
-// Execute runs the root command.
 func Execute() error {
 	return rootCmd.Execute()
 }
 
-// Persistent flags that apply to the run command (and root when invoked bare).
 var (
 	flagTheme    string
 	flagScene    string
@@ -59,9 +57,8 @@ Shell integration:
   drift shell-init fish | source
 
 Run 'drift list scenes' and 'drift list themes' to explore what's available.`,
-	RunE: runEngine,
-	// Don't print usage on error — it obscures the actual error message.
-	SilenceUsage: true,
+	RunE:         runEngine,
+	SilenceUsage: true, // don't print usage on error, it obscures the message
 }
 
 func init() {
@@ -84,7 +81,6 @@ func runEngine(cmd *cobra.Command, _ []string) error {
 		cfg = config.Default()
 	}
 
-	// CLI flags override config values.
 	if flagTheme != "" {
 		cfg.Engine.Theme = flagTheme
 	}
@@ -103,10 +99,6 @@ func runEngine(cmd *cobra.Command, _ []string) error {
 	e := engine.New(*cfg)
 	return e.Run()
 }
-
-// ----------------------------------------------------------------------------
-// shell-init command
-// ----------------------------------------------------------------------------
 
 var shellInitCmd = &cobra.Command{
 	Use:       "shell-init <shell>",
@@ -136,10 +128,6 @@ func shellSnippet(shell string) (string, error) {
 		return "", fmt.Errorf("unsupported shell %q — choose from: zsh, bash, fish", shell)
 	}
 }
-
-// ----------------------------------------------------------------------------
-// list command
-// ----------------------------------------------------------------------------
 
 var listCmd = &cobra.Command{
 	Use:   "list <scenes|themes>",
@@ -171,14 +159,9 @@ var listCmd = &cobra.Command{
 	},
 }
 
-// colorSwatch renders a small colored block using ANSI true-color escape codes.
 func colorSwatch(c scene.RGBColor) string {
 	return fmt.Sprintf("\x1b[38;2;%d;%d;%dm██\x1b[0m", c.R, c.G, c.B)
 }
-
-// ----------------------------------------------------------------------------
-// version command
-// ----------------------------------------------------------------------------
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
@@ -187,10 +170,6 @@ var versionCmd = &cobra.Command{
 		fmt.Printf("drift %s (commit %s, built %s)\n", buildVersion, buildCommit, buildDate)
 	},
 }
-
-// ----------------------------------------------------------------------------
-// config command
-// ----------------------------------------------------------------------------
 
 var configCmd = &cobra.Command{
 	Use:   "config",

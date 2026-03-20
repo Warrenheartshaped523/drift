@@ -9,12 +9,9 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
-// starGlyphs is an ordered rune slice from faintest to brightest.
-// Each star is assigned one based on its base brightness.
+// starGlyphs ordered from faintest to brightest.
 var starGlyphs = []rune{'·', '∘', '○', '◦', '*', '✦'}
 
-// Constellation animates a field of slowly drifting stars that connect to
-// nearby neighbours with thin dotted lines.
 type Constellation struct {
 	w, h  int
 	theme Theme
@@ -27,15 +24,14 @@ type Constellation struct {
 }
 
 type star struct {
-	x, y         float64
-	vx, vy       float64
-	twinkle      float64 // phase, radians
-	twinkleFreq  float64 // radians per second
-	glyphIdx     int
-	paletteIdx   int
+	x, y        float64
+	vx, vy      float64
+	twinkle     float64 // phase, radians
+	twinkleFreq float64 // radians per second
+	glyphIdx    int
+	paletteIdx  int
 }
 
-// NewConstellation returns a fresh Constellation scene.
 func NewConstellation() *Constellation { return &Constellation{} }
 
 func (c *Constellation) Name() string { return "constellation" }
@@ -57,7 +53,6 @@ func (c *Constellation) Init(w, h int, t Theme) {
 func (c *Constellation) Resize(w, h int) {
 	c.w, c.h = w, h
 	c.connectDist = math.Sqrt(float64(w*w+h*h)) * 0.18
-	// Re-scatter stars that are now outside the new bounds.
 	for i := range c.stars {
 		s := &c.stars[i]
 		if s.x >= float64(w) || s.y >= float64(h) {
@@ -74,7 +69,6 @@ func (c *Constellation) randomStar(scattered bool) star {
 		x = c.rng.Float64() * float64(c.w)
 		y = c.rng.Float64() * float64(c.h)
 	} else {
-		// Spawn at a random edge.
 		switch c.rng.Intn(4) {
 		case 0:
 			x, y = c.rng.Float64()*float64(c.w), 0
@@ -126,9 +120,11 @@ func (c *Constellation) Update(dt float64) {
 }
 
 func (c *Constellation) Draw(screen tcell.Screen) {
-	// Pre-sort connection candidates per star (limit to maxConnections closest
-	// neighbours) so dense screens don't become a wall of lines.
-	type edge struct{ i, j int; dist float64 }
+	// Limit connections per star so dense screens don't become a wall of lines.
+	type edge struct {
+		i, j int
+		dist float64
+	}
 	edges := make([]edge, 0, len(c.stars)*c.maxConnections)
 	connCount := make([]int, len(c.stars))
 
@@ -157,7 +153,6 @@ func (c *Constellation) Draw(screen tcell.Screen) {
 		}
 	}
 
-	// Draw connection lines (dotted, fading by distance).
 	for _, e := range edges {
 		a, b := &c.stars[e.i], &c.stars[e.j]
 		alpha := (1.0 - e.dist/c.connectDist) * 0.55
@@ -165,15 +160,14 @@ func (c *Constellation) Draw(screen tcell.Screen) {
 		c.drawDots(screen, int(a.x+0.5), int(a.y+0.5), int(b.x+0.5), int(b.y+0.5), color)
 	}
 
-	// Draw stars on top of the lines.
 	for i := range c.stars {
 		s := &c.stars[i]
 		brightness := 0.55 + 0.45*math.Sin(s.twinkle)
 		dim := c.theme.Dim[s.paletteIdx%len(c.theme.Dim)]
 		pal := c.theme.Palette[s.paletteIdx]
 		color := Lerp(dim, pal, brightness)
-		// Bright center flash at peak twinkle.
 		if brightness > 0.9 {
+			// Flash toward Bright at peak twinkle.
 			color = Lerp(pal, c.theme.Bright, (brightness-0.9)*10)
 		}
 		x, y := int(s.x+0.5), int(s.y+0.5)
@@ -183,7 +177,7 @@ func (c *Constellation) Draw(screen tcell.Screen) {
 	}
 }
 
-// drawDots interpolates from (x0,y0) to (x1,y1) and places '·' at each step.
+// drawDots places '·' along the line from (x0,y0) to (x1,y1).
 // Endpoints are skipped so stars always render on top.
 func (c *Constellation) drawDots(screen tcell.Screen, x0, y0, x1, y1 int, color RGBColor) {
 	dx := x1 - x0
