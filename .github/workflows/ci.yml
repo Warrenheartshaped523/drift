@@ -31,10 +31,6 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: go mod tidy && git diff --exit-code go.sum
 
-      - name: Check gofmt
-        if: matrix.os == 'ubuntu-latest'
-        run: test -z "$(gofmt -s -l .)"
-
       - name: Vet
         run: go vet ./...
 

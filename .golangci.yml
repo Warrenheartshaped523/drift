@@ -7,6 +7,11 @@ linters:
     - gosimple
     - ineffassign
     - typecheck
+    - gofmt
+
+linters-settings:
+  gofmt:
+    simplify: true
 
 issues:
   exclude-rules:
