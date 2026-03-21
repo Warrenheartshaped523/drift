@@ -186,49 +186,45 @@ func (m *Maze) Update(dt float64) {
 	}
 }
 
+// wallCharTable maps a 4-bit neighbour mask to the corresponding box-drawing
+// rune. Bits: 0=left, 1=right, 2=up, 3=down.
+var wallCharTable = [16]rune{
+	0b0000: '·',
+	0b0001: '╴',
+	0b0010: '╶',
+	0b0011: '─',
+	0b0100: '╵',
+	0b0101: '┘',
+	0b0110: '└',
+	0b0111: '┴',
+	0b1000: '╷',
+	0b1001: '┐',
+	0b1010: '┌',
+	0b1011: '┬',
+	0b1100: '│',
+	0b1101: '┤',
+	0b1110: '├',
+	0b1111: '┼',
+}
+
 func (m *Maze) wallChar(x, y int) rune {
 	isWall := func(tx, ty int) bool {
 		return tx >= 0 && tx < m.w && ty >= 0 && ty < m.h && m.walls[tx][ty]
 	}
-	l := isWall(x-1, y)
-	r := isWall(x+1, y)
-	u := isWall(x, y-1)
-	d := isWall(x, y+1)
-
-	switch {
-	case l && r && u && d:
-		return '┼'
-	case l && r && u:
-		return '┴'
-	case l && r && d:
-		return '┬'
-	case l && u && d:
-		return '┤'
-	case r && u && d:
-		return '├'
-	case l && r:
-		return '─'
-	case u && d:
-		return '│'
-	case r && d:
-		return '┌'
-	case l && d:
-		return '┐'
-	case r && u:
-		return '└'
-	case l && u:
-		return '┘'
-	case r:
-		return '╶'
-	case l:
-		return '╴'
-	case d:
-		return '╷'
-	case u:
-		return '╵'
-	default:
-		return '·'
+	var mask int
+	if isWall(x-1, y) {
+		mask |= 1
 	}
+	if isWall(x+1, y) {
+		mask |= 2
+	}
+	if isWall(x, y-1) {
+		mask |= 4
+	}
+	if isWall(x, y+1) {
+		mask |= 8
+	}
+	return wallCharTable[mask]
 }
 
 func (m *Maze) Draw(screen tcell.Screen) {

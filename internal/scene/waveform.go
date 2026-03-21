@@ -142,50 +142,57 @@ func (wf *Waveform) Draw(screen tcell.Screen) {
 	// Convert pixel buffer → braille characters → screen.
 	for cx := 0; cx < wf.w; cx++ {
 		for cy := 0; cy < wf.h; cy++ {
-			var mask uint8
-			// waveCounts[li] = dots contributed by layer li in this cell.
-			var waveCounts [3]int
-
-			for subRow := 0; subRow < 4; subRow++ {
-				for subCol := 0; subCol < 2; subCol++ {
-					px := cx*2 + subCol
-					py := cy*4 + subRow
-					if px >= wf.pw || py >= wf.ph {
-						continue
-					}
-					waveIdx := wf.pixels[px][py]
-					if waveIdx == 0 {
-						continue
-					}
-					bitOffset := brailleOffsets[subRow][subCol]
-					mask |= uint8(1) << bitOffset
-					if int(waveIdx-1) < len(waveCounts) {
-						waveCounts[waveIdx-1]++
-					}
-				}
+			ch, style, ok := wf.buildBrailleCell(cx, cy)
+			if ok {
+				screen.SetContent(cx, cy, ch, nil, style)
 			}
-
-			if mask == 0 {
-				continue
-			}
-
-			// Color from the wave that contributed the most dots.
-			bestWave := 0
-			for li := 1; li < len(wf.layers); li++ {
-				if waveCounts[li] > waveCounts[bestWave] {
-					bestWave = li
-				}
-			}
-
-			color := wf.layers[bestWave].color
-			totalBits := waveCounts[0] + waveCounts[1] + waveCounts[2]
-			if totalBits > 0 {
-				boost := clamp64(float64(totalBits)/8.0, 0, 1) * 0.35
-				color = Lerp(color, wf.theme.Bright, boost)
-			}
-
-			ch := '\u2800' | rune(mask)
-			screen.SetContent(cx, cy, ch, nil, color.Style())
 		}
 	}
+}
+
+// buildBrailleCell samples the pixel buffer for the terminal cell at (cx, cy),
+// returns the braille rune, its style, and whether the cell has any dots.
+func (wf *Waveform) buildBrailleCell(cx, cy int) (rune, tcell.Style, bool) {
+	var mask uint8
+	var waveCounts [3]int
+
+	for subRow := 0; subRow < 4; subRow++ {
+		for subCol := 0; subCol < 2; subCol++ {
+			px := cx*2 + subCol
+			py := cy*4 + subRow
+			if px >= wf.pw || py >= wf.ph {
+				continue
+			}
+			waveIdx := wf.pixels[px][py]
+			if waveIdx == 0 {
+				continue
+			}
+			bitOffset := brailleOffsets[subRow][subCol]
+			mask |= uint8(1) << bitOffset
+			if int(waveIdx-1) < len(waveCounts) {
+				waveCounts[waveIdx-1]++
+			}
+		}
+	}
+
+	if mask == 0 {
+		return 0, tcell.StyleDefault, false
+	}
+
+	// Color from the wave that contributed the most dots.
+	bestWave := 0
+	for li := 1; li < len(wf.layers); li++ {
+		if waveCounts[li] > waveCounts[bestWave] {
+			bestWave = li
+		}
+	}
+
+	color := wf.layers[bestWave].color
+	totalBits := waveCounts[0] + waveCounts[1] + waveCounts[2]
+	if totalBits > 0 {
+		boost := clamp64(float64(totalBits)/8.0, 0, 1) * 0.35
+		color = Lerp(color, wf.theme.Bright, boost)
+	}
+
+	return '\u2800' | rune(mask), color.Style(), true
 }

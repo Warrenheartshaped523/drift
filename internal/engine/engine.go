@@ -114,54 +114,64 @@ func (e *Engine) Run() error {
 	for {
 		select {
 		case ev := <-events:
-			switch ev.(type) {
-			case *tcell.EventKey:
+			if done := e.handleEvent(ev, screen, &w, &h); done {
 				return nil
-			case *tcell.EventMouse:
-				return nil
-			case *tcell.EventResize:
-				w, h = screen.Size()
-				e.scenes[e.cur].Resize(w, h)
-				screen.Sync()
 			}
-
 		case now := <-ticker.C:
 			dt := now.Sub(lastTick).Seconds()
 			lastTick = now
-			// Cap dt to prevent large jumps after sleep/wake.
-			if dt > 0.1 {
-				dt = 0.1
-			}
+			e.handleTick(dt, screen, t, &w, &h)
+		}
+	}
+}
 
-			// Advance OLED pixel shift: nudge by 1 cell every 10 seconds,
-			// cycling through a 3×3 grid so every position resets to (0,0)
-			// after 90 seconds.
-			e.shiftTimer += dt
-			if e.shiftTimer >= 10.0 {
-				e.shiftTimer -= 10.0
-				e.shiftOX = (e.shiftOX + 1) % 3
-				if e.shiftOX == 0 {
-					e.shiftOY = (e.shiftOY + 1) % 3
-				}
-			}
+// handleEvent processes a single terminal event. Returns true if drift should exit.
+func (e *Engine) handleEvent(ev tcell.Event, screen tcell.Screen, w, h *int) bool {
+	switch ev.(type) {
+	case *tcell.EventKey, *tcell.EventMouse:
+		return true
+	case *tcell.EventResize:
+		*w, *h = screen.Size()
+		e.scenes[e.cur].Resize(*w, *h)
+		screen.Sync()
+	}
+	return false
+}
 
-			cur := e.scenes[e.cur]
-			cur.Update(dt)
+// handleTick advances the simulation by dt seconds and redraws the screen.
+func (e *Engine) handleTick(dt float64, screen tcell.Screen, t scene.Theme, w, h *int) {
+	// Cap dt to prevent large jumps after sleep/wake.
+	if dt > 0.1 {
+		dt = 0.1
+	}
 
-			shifted := &shiftScreen{Screen: screen, ox: e.shiftOX, oy: e.shiftOY}
-			screen.Fill(' ', tcell.StyleDefault)
-			cur.Draw(shifted)
-			screen.Show()
+	// Advance OLED pixel shift: nudge by 1 cell every 10 seconds,
+	// cycling through a 3×3 grid so every position resets to (0,0)
+	// after 90 seconds.
+	e.shiftTimer += dt
+	if e.shiftTimer >= 10.0 {
+		e.shiftTimer -= 10.0
+		e.shiftOX = (e.shiftOX + 1) % 3
+		if e.shiftOX == 0 {
+			e.shiftOY = (e.shiftOY + 1) % 3
+		}
+	}
 
-			if e.cfg.Engine.CycleSeconds > 0 && len(e.scenes) > 1 {
-				e.sceneAge += dt
-				if e.sceneAge >= e.cfg.Engine.CycleSeconds {
-					e.sceneAge = 0
-					e.cur = (e.cur + 1) % len(e.scenes)
-					w, h = screen.Size()
-					e.scenes[e.cur].Init(w, h, t)
-				}
-			}
+	cur := e.scenes[e.cur]
+	cur.Update(dt)
+
+	shifted := &shiftScreen{Screen: screen, ox: e.shiftOX, oy: e.shiftOY}
+	screen.Fill(' ', tcell.StyleDefault)
+	cur.Draw(shifted)
+	screen.Show()
+
+	if e.cfg.Engine.CycleSeconds > 0 && len(e.scenes) > 1 {
+		e.sceneAge += dt
+		if e.sceneAge >= e.cfg.Engine.CycleSeconds {
+			e.sceneAge = 0
+			e.cur = (e.cur + 1) % len(e.scenes)
+			*w, *h = screen.Size()
+			e.scenes[e.cur].Init(*w, *h, t)
 		}
 	}
 }
