@@ -38,6 +38,8 @@ type SceneConfig struct {
 	Rain          RainConfig          `toml:"rain"`
 	Particles     ParticlesConfig     `toml:"particles"`
 	Waveform      WaveformConfig      `toml:"waveform"`
+	Pipes         PipesConfig         `toml:"pipes"`
+	Maze          MazeConfig          `toml:"maze"`
 }
 
 type ConstellationConfig struct {
@@ -63,6 +65,19 @@ type WaveformConfig struct {
 	Layers    int     `toml:"layers"`
 	Amplitude float64 `toml:"amplitude"` // 0.0–1.0
 	Speed     float64 `toml:"speed"`     // multiplier
+}
+
+type PipesConfig struct {
+	Heads        int     `toml:"heads"`         // number of pipe heads
+	TurnChance   float64 `toml:"turn_chance"`   // probability of turning per step (0.0–1.0)
+	Speed        float64 `toml:"speed"`         // step rate multiplier
+	ResetSeconds float64 `toml:"reset_seconds"` // seconds before screen clears and restarts
+}
+
+type MazeConfig struct {
+	PauseSeconds float64 `toml:"pause_seconds"` // seconds to display completed maze before fading
+	FadeSeconds  float64 `toml:"fade_seconds"`  // seconds the fade-out takes
+	Speed        float64 `toml:"speed"`         // build speed multiplier
 }
 
 func Default() *Config {
@@ -98,6 +113,17 @@ func Default() *Config {
 				Layers:    3,
 				Amplitude: 0.70,
 				Speed:     1.0,
+			},
+			Pipes: PipesConfig{
+				Heads:        6,
+				TurnChance:   0.15,
+				Speed:        1.0,
+				ResetSeconds: 45.0,
+			},
+			Maze: MazeConfig{
+				PauseSeconds: 3.0,
+				FadeSeconds:  2.0,
+				Speed:        1.0,
 			},
 		},
 	}
@@ -171,7 +197,7 @@ timeout = 120
 fps           = 30     # target frames per second
 cycle_seconds = 60     # seconds per scene, 0 = stay on one scene
 scenes        = "all"  # comma-separated list or "all"
-theme         = "cosmic" # cosmic | nord | dracula | catppuccin | gruvbox | forest | mono
+theme         = "cosmic" # cosmic | nord | dracula | catppuccin | gruvbox | forest | wildberries | mono
 shuffle       = true   # randomise scene order
 
 [scene.constellation]
@@ -194,4 +220,15 @@ friction = 0.98
 layers    = 3
 amplitude = 0.70
 speed     = 1.0
+
+[scene.pipes]
+heads         = 6
+turn_chance   = 0.15  # probability of turning per step (0.0–1.0)
+speed         = 1.0
+reset_seconds = 45.0  # seconds before screen clears and restarts
+
+[scene.maze]
+pause_seconds = 3.0   # seconds to display completed maze before fading
+fade_seconds  = 2.0   # seconds the fade-out takes
+speed         = 1.0   # build speed multiplier
 `

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gdamore/tcell/v2"
+	"github.com/phlx0/drift/internal/config"
 )
 
 var mazeDirs = [4][2]int{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
@@ -35,9 +36,19 @@ type Maze struct {
 
 	wallList []mazePos
 	fadeIdx  int
+
+	cfgPauseSeconds float64
+	cfgFadeSeconds  float64
+	cfgSpeed        float64
 }
 
-func NewMaze() *Maze { return &Maze{} }
+func NewMaze(cfg config.MazeConfig) *Maze {
+	return &Maze{
+		cfgPauseSeconds: cfg.PauseSeconds,
+		cfgFadeSeconds:  cfg.FadeSeconds,
+		cfgSpeed:        cfg.Speed,
+	}
+}
 
 func (m *Maze) Name() string { return "maze" }
 
@@ -129,7 +140,7 @@ func (m *Maze) Update(dt float64) {
 	switch m.state {
 	case mazeBuilding:
 		m.buildTimer += dt
-		stepsPerSec := float64(m.mw*m.mh) / 10.0
+		stepsPerSec := float64(m.mw*m.mh) / 10.0 * m.cfgSpeed
 		if stepsPerSec < 8 {
 			stepsPerSec = 8
 		}
@@ -141,7 +152,7 @@ func (m *Maze) Update(dt float64) {
 
 	case mazeComplete:
 		m.stateTimer += dt
-		if m.stateTimer >= 3.0 {
+		if m.stateTimer >= m.cfgPauseSeconds {
 			m.wallList = m.wallList[:0]
 			for x := 0; x < m.w; x++ {
 				for y := 0; y < m.h; y++ {
@@ -160,7 +171,7 @@ func (m *Maze) Update(dt float64) {
 
 	case mazeFading:
 		m.stateTimer += dt
-		target := int(m.stateTimer / 2.0 * float64(len(m.wallList)))
+		target := int(m.stateTimer / m.cfgFadeSeconds * float64(len(m.wallList)))
 		if target > len(m.wallList) {
 			target = len(m.wallList)
 		}

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gdamore/tcell/v2"
+	"github.com/phlx0/drift/internal/config"
 )
 
 const (
@@ -53,9 +54,21 @@ type Pipes struct {
 	heads      []pipeHead
 	grid       [][]pipeCell
 	resetTimer float64
+
+	cfgHeads        int
+	cfgTurnChance   float64
+	cfgSpeed        float64
+	cfgResetSeconds float64
 }
 
-func NewPipes() *Pipes { return &Pipes{} }
+func NewPipes(cfg config.PipesConfig) *Pipes {
+	return &Pipes{
+		cfgHeads:        cfg.Heads,
+		cfgTurnChance:   cfg.TurnChance,
+		cfgSpeed:        cfg.Speed,
+		cfgResetSeconds: cfg.ResetSeconds,
+	}
+}
 
 func (p *Pipes) Name() string { return "pipes" }
 
@@ -82,8 +95,7 @@ func (p *Pipes) rebuildGrid() {
 }
 
 func (p *Pipes) spawnHeads() {
-	const count = 6
-	p.heads = make([]pipeHead, count)
+	p.heads = make([]pipeHead, p.cfgHeads)
 	for i := range p.heads {
 		p.heads[i] = p.newHead()
 	}
@@ -96,13 +108,13 @@ func (p *Pipes) newHead() pipeHead {
 		dir:        p.rng.Intn(4),
 		paletteIdx: p.rng.Intn(len(p.theme.Palette)),
 		stepTimer:  p.rng.Float64() * 0.1,
-		stepRate:   10.0 + p.rng.Float64()*10.0,
+		stepRate:   (10.0 + p.rng.Float64()*10.0) * p.cfgSpeed,
 	}
 }
 
 func (p *Pipes) Update(dt float64) {
 	p.resetTimer += dt
-	if p.resetTimer >= 45 {
+	if p.resetTimer >= p.cfgResetSeconds {
 		p.rebuildGrid()
 		p.spawnHeads()
 		p.resetTimer = 0
@@ -122,7 +134,7 @@ func (p *Pipes) Update(dt float64) {
 
 func (p *Pipes) advance(h *pipeHead) {
 	newDir := h.dir
-	if p.rng.Float64() < 0.15 {
+	if p.rng.Float64() < p.cfgTurnChance {
 		perp := [2]int{(h.dir + 1) % 4, (h.dir + 3) % 4}
 		newDir = perp[p.rng.Intn(2)]
 	}
