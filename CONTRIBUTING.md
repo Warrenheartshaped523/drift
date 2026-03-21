@@ -59,7 +59,10 @@ drift/
 │       ├── constellation.go   Drifting stars with connection lines
 │       ├── rain.go            Falling character rain
 │       ├── particles.go       Flow-field particle system
-│       └── waveform.go        Braille sine wave layers
+│       ├── waveform.go        Braille sine wave layers
+│       ├── pipes.go           Box-drawing pipes
+│       ├── maze.go            Recursive backtracker maze
+│       └── life.go            Conway's Game of Life
 └── .github/workflows/         CI and release automation
 ```
 

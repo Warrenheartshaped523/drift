@@ -41,6 +41,11 @@ setup:
 demo:
 	vhs demo/waveform.tape
 	vhs demo/constellation.tape
+	vhs demo/rain.tape
+	vhs demo/particles.tape
+	vhs demo/pipes.tape
+	vhs demo/maze.tape
+	vhs demo/life.tape
 	vhs demo/demo.tape
 
 ## help: print this help
