@@ -1,4 +1,4 @@
-.PHONY: build run install clean test lint setup help
+.PHONY: build run install clean test lint fmt setup help
 
 BINARY := drift
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
@@ -23,6 +23,10 @@ test:
 ## lint: run golangci-lint
 lint:
 	golangci-lint run ./...
+
+## fmt: format all Go files with gofmt -s
+fmt:
+	gofmt -s -w ./...
 
 ## clean: remove built artefacts
 clean:
