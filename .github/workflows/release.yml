@@ -9,9 +9,36 @@ permissions:
   contents: write
 
 jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.63.4
+
+      - name: Test
+        run: go test -race -count=1 ./...
+
   release:
     name: Release
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: validate
     steps:
       - uses: actions/checkout@v6
         with:
@@ -21,12 +48,6 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
-
-      - name: Download dependencies
-        run: go mod download
-
-      - name: Test
-        run: go test -race -count=1 ./...
 
       - name: Extract release notes from CHANGELOG.md
         run: |
