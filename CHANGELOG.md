@@ -9,19 +9,22 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+---
+
+## [0.6.0] — 2026-03-21
+
 ### Added
 
 - **rosepine** theme — Rosé Pine colorscheme; palette uses Love, Iris, Foam, and Pine accents with the base background layers as dim variants
-- **tmux status toggle** — hides the tmux status bar while drift is active and restores it on exit; opt-in via `hide_tmux_status = true` in `[engine]`
 - **automatic PR labeling** — labels applied automatically on PRs based on changed file paths and branch name prefix via `actions/labeler`
 - **platform and PRs Welcome badges** added to README
 - **scene and theme issue templates** added for structured contributions
 
 ### Changed
 
-- CONTRIBUTING.md requires a `CHANGELOG.md` entry for every user-visible change; `make fmt` and `make lint` documented as the standard commands
+- CONTRIBUTING.md requires a `CHANGELOG.md` entry for every user-visible change; `make fmt` and `make lint` documented as the standard commands; project structure updated to include all scenes
 - GitHub PR template expanded with per-type checklists for scenes and themes
-- `make fmt` target added to Makefile (`gofmt -s -w ./...`)
+- `make fmt` target added to Makefile (`gofmt -s -w ./...`); demo targets updated to include all scenes
 - `gofmt` and `misspell` linters added to `.golangci.yml`
 - README logo centered correctly using `<pre>` tag instead of fenced code block
 
@@ -158,6 +161,7 @@ Activate with `eval "$(drift shell-init zsh)"` (or bash/fish).
 - Pre-built releases for macOS and Linux (amd64 + arm64)
 - goreleaser pipeline with SHA-256 checksums
 
+[0.6.0]: https://github.com/phlx0/drift/releases/tag/v0.6.0
 [0.5.0]: https://github.com/phlx0/drift/releases/tag/v0.5.0
 [0.4.1]: https://github.com/phlx0/drift/releases/tag/v0.4.1
 [0.4.0]: https://github.com/phlx0/drift/releases/tag/v0.4.0
