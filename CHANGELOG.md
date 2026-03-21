@@ -11,6 +11,20 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.4.1] — 2026-03-21
+
+### Added
+
+- **pipes config**: `[scene.pipes]` now configurable — `heads`, `turn_chance`, `speed`, `reset_seconds`
+- **maze config**: `[scene.maze]` now configurable — `pause_seconds`, `fade_seconds`, `speed`
+
+### Fixed
+
+- `drift config --init` template was missing `[scene.pipes]` and `[scene.maze]` sections
+- `wildberries` theme was missing from the theme comment in the default config
+
+---
+
 ## [0.4.0] — 2026-03-21
 
 ### Fixed
@@ -110,6 +124,7 @@ Activate with `eval "$(drift shell-init zsh)"` (or bash/fish).
 - Pre-built releases for macOS and Linux (amd64 + arm64)
 - goreleaser pipeline with SHA-256 checksums
 
+[0.4.1]: https://github.com/phlx0/drift/releases/tag/v0.4.1
 [0.4.0]: https://github.com/phlx0/drift/releases/tag/v0.4.0
 [0.3.1]: https://github.com/phlx0/drift/releases/tag/v0.3.1
 [0.3.0]: https://github.com/phlx0/drift/releases/tag/v0.3.0
