@@ -12,6 +12,18 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - **rosepine** theme — Rosé Pine colorscheme; palette uses Love, Iris, Foam, and Pine accents with the base background layers as dim variants
+- **tmux status toggle** — hides the tmux status bar while drift is active and restores it on exit; opt-in via `hide_tmux_status = true` in `[engine]`
+- **automatic PR labeling** — labels applied automatically on PRs based on changed file paths and branch name prefix via `actions/labeler`
+- **Go Report Card and PRs Welcome badges** added to README
+
+### Changed
+
+- CONTRIBUTING.md now requires a `CHANGELOG.md` entry for every user-visible change
+- GitHub PR template expanded with per-type checklists for scenes and themes
+- New issue templates added: scene request and theme request
+- `make fmt` target added (`gofmt -s -w ./...`)
+- `misspell` linter added to golangci-lint
+- `gofmt` linter with `simplify: true` moved into `.golangci.yml`
 
 ---
 

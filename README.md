@@ -16,6 +16,8 @@ Every OS has a screensaver. The terminal had nothing — until now.
 [![CI](https://img.shields.io/github/actions/workflow/status/phlx0/drift/ci.yml?style=flat-square&label=ci)](https://github.com/phlx0/drift/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/phlx0/drift?style=flat-square)](https://goreportcard.com/report/github.com/phlx0/drift)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
+[![macOS](https://img.shields.io/badge/macOS-supported-brightgreen?style=flat-square&logo=apple&logoColor=white)](https://github.com/phlx0/drift/releases)
+[![Linux](https://img.shields.io/badge/Linux-supported-brightgreen?style=flat-square&logo=linux&logoColor=white)](https://github.com/phlx0/drift/releases)
 
 </div>
 
