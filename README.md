@@ -25,7 +25,7 @@ Every OS has a screensaver. The terminal had nothing — until now.
 
 ## Scenes
 
-drift ships six animations. They cycle automatically or you can lock to one.
+drift ships seven animations. They cycle automatically or you can lock to one.
 
 <table>
 <tr>
@@ -74,6 +74,17 @@ drift ships six animations. They cycle automatically or you can lock to one.
 
 <img src="demo/maze.gif" width="100%" />
 
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**life** — Conway's Game of Life; cells flash bright on birth, age through the palette, reset when the grid stagnates
+
+<img src="demo/life.gif" width="100%" />
+
+</td>
+<td width="50%">
 </td>
 </tr>
 </table>
@@ -238,6 +249,11 @@ reset_seconds = 45.0
 pause_seconds = 3.0
 fade_seconds  = 2.0
 speed         = 1.0
+
+[scene.life]
+density       = 0.35
+speed         = 1.0
+reset_seconds = 30.0
 ```
 
 ---

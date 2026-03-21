@@ -41,6 +41,7 @@ type SceneConfig struct {
 	Waveform      WaveformConfig      `toml:"waveform"`
 	Pipes         PipesConfig         `toml:"pipes"`
 	Maze          MazeConfig          `toml:"maze"`
+	Life          LifeConfig          `toml:"life"`
 }
 
 type ConstellationConfig struct {
@@ -79,6 +80,12 @@ type MazeConfig struct {
 	PauseSeconds float64 `toml:"pause_seconds"` // seconds to display completed maze before fading
 	FadeSeconds  float64 `toml:"fade_seconds"`  // seconds the fade-out takes
 	Speed        float64 `toml:"speed"`         // build speed multiplier
+}
+
+type LifeConfig struct {
+	Density      float64 `toml:"density"`       // initial fill probability (0.0–1.0)
+	Speed        float64 `toml:"speed"`         // step rate multiplier
+	ResetSeconds float64 `toml:"reset_seconds"` // seconds before forced reset
 }
 
 func Default() *Config {
@@ -125,6 +132,11 @@ func Default() *Config {
 				PauseSeconds: 3.0,
 				FadeSeconds:  2.0,
 				Speed:        1.0,
+			},
+			Life: LifeConfig{
+				Density:      0.35,
+				Speed:        1.0,
+				ResetSeconds: 30.0,
 			},
 		},
 	}
@@ -244,4 +256,9 @@ reset_seconds = 45.0  # seconds before screen clears and restarts
 pause_seconds = 3.0   # seconds to display completed maze before fading
 fade_seconds  = 2.0   # seconds the fade-out takes
 speed         = 1.0   # build speed multiplier
+
+[scene.life]
+density       = 0.35  # initial fill probability (0.0–1.0)
+speed         = 1.0   # step rate multiplier
+reset_seconds = 30.0  # seconds before forced reset
 `

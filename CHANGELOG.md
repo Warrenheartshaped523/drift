@@ -12,6 +12,7 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - **OLED pixel shift**: the engine nudges the entire rendered image by one cell every 10 seconds, cycling through a 3×3 grid (90-second full cycle). Keeps every pixel in motion and reduces burn-in risk on OLED displays. Implemented once in the engine — all scenes benefit automatically. Closes #14
+- **life** scene — Conway's Game of Life on a toroidal grid; newborn cells flash bright, age through the palette, then fade to dim variants. Resets after `reset_seconds` or after 3 seconds of stagnation. Configurable via `[scene.life]`: `density`, `speed`, `reset_seconds`
 
 ---
 
