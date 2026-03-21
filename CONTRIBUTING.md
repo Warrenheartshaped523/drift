@@ -206,7 +206,7 @@ Run `./drift list themes` to confirm it appears.
 
 ## Code style
 
-- Standard `gofmt` / `goimports` formatting.
+- Standard `gofmt -s` formatting — run `gofmt -s -w ./...` before committing. CI will fail if any file is not formatted.
 - No external linters beyond `go vet` are required, but PRs must pass the CI lint step.
 - Keep files focused. If a scene file grows beyond ~300 lines, consider splitting helpers.
 - Exported symbols need doc comments; unexported helpers are optional.
