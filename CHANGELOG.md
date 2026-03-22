@@ -11,10 +11,17 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.6.1] — 2026-03-22
+
+### Added
+
+- **tmux status toggle** — hides the tmux status bar while drift is active and restores it on exit; opt-in via `hide_tmux_status = true` in `[engine]`
+
+---
+
 ## [0.6.0] — 2026-03-21
 
 ### Added
-- **tmux status toggle** — hides the tmux status bar while drift is active and restores it on exit; opt-in via `hide_tmux_status = true` in `[engine]`
 - **rosepine** theme — Rosé Pine colorscheme; palette uses Love, Iris, Foam, and Pine accents with the base background layers as dim variants
 - **automatic PR labeling** — labels applied automatically on PRs based on changed file paths and branch name prefix via `actions/labeler`
 - **platform and PRs Welcome badges** added to README
@@ -161,6 +168,7 @@ Activate with `eval "$(drift shell-init zsh)"` (or bash/fish).
 - Pre-built releases for macOS and Linux (amd64 + arm64)
 - goreleaser pipeline with SHA-256 checksums
 
+[0.6.1]: https://github.com/phlx0/drift/releases/tag/v0.6.1
 [0.6.0]: https://github.com/phlx0/drift/releases/tag/v0.6.0
 [0.5.0]: https://github.com/phlx0/drift/releases/tag/v0.5.0
 [0.4.1]: https://github.com/phlx0/drift/releases/tag/v0.4.1
