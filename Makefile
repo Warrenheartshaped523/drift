@@ -46,6 +46,7 @@ demo:
 	vhs demo/pipes.tape
 	vhs demo/maze.tape
 	vhs demo/life.tape
+	vhs demo/clock.tape
 	vhs demo/demo.tape
 
 ## help: print this help

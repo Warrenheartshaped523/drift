@@ -92,6 +92,8 @@ drift ships seven animations. They cycle automatically or you can lock to one.
 
 **clock** — current time in large braille digits, styled in the active theme, with the date below
 
+<img src="demo/clock.gif" width="100%" />
+
 </td>
 </tr>
 </table>
