@@ -9,6 +9,10 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+---
+
+## [0.7.0] — 2026-03-26
+
 ### Added
 
 - **clock** scene — current time rendered as large braille digits (5×7 pixel font, 3×2 char cells per digit) centred on screen, styled in the active theme; shows the date below in dim color; configurable via `[scene.clock]`: `show_date`
@@ -176,6 +180,7 @@ Activate with `eval "$(drift shell-init zsh)"` (or bash/fish).
 - Pre-built releases for macOS and Linux (amd64 + arm64)
 - goreleaser pipeline with SHA-256 checksums
 
+[0.7.0]: https://github.com/phlx0/drift/releases/tag/v0.7.0
 [0.6.1]: https://github.com/phlx0/drift/releases/tag/v0.6.1
 [0.6.0]: https://github.com/phlx0/drift/releases/tag/v0.6.0
 [0.5.0]: https://github.com/phlx0/drift/releases/tag/v0.5.0
