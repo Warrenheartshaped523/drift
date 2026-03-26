@@ -36,6 +36,11 @@ type SceneConfig struct {
 	Pipes         PipesConfig         `toml:"pipes"`
 	Maze          MazeConfig          `toml:"maze"`
 	Life          LifeConfig          `toml:"life"`
+	Clock         ClockConfig         `toml:"clock"`
+}
+
+type ClockConfig struct {
+	ShowDate bool `toml:"show_date"`
 }
 
 type ConstellationConfig struct {
@@ -128,6 +133,9 @@ func Default() *Config {
 				Density:      0.35,
 				Speed:        1.0,
 				ResetSeconds: 30.0,
+			},
+			Clock: ClockConfig{
+				ShowDate: true,
 			},
 		},
 	}
@@ -251,4 +259,7 @@ speed         = 1.0   # build speed multiplier
 density       = 0.35  # initial fill probability (0.0–1.0)
 speed         = 1.0   # step rate multiplier
 reset_seconds = 30.0  # seconds before forced reset
+
+[scene.clock]
+show_date = true  # show date below the time
 `

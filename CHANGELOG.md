@@ -11,6 +11,7 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **clock** scene — current time rendered as large braille digits (5×7 pixel font, 3×2 char cells per digit) centred on screen, styled in the active theme; shows the date below in dim color; configurable via `[scene.clock]`: `show_date`
 - **AUR packaging** — `drift-bin` (pre-built binary) and `drift-git` (builds from HEAD) packages published to the Arch User Repository; install with `yay -S drift-bin` or `yay -S drift-git`
 - **AUR release automation** — GitHub Actions workflow (`.github/workflows/aur.yml`) automatically updates `drift-bin` PKGBUILD and `.SRCINFO` on every release, computing new checksums and pushing to AUR
 - **AUR badge** added to README

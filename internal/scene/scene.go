@@ -41,6 +41,7 @@ func All(cfgs ...config.SceneConfig) []Scene {
 		NewPipes(cfg.Pipes),
 		NewMaze(cfg.Maze),
 		NewLife(cfg.Life),
+		NewClock(cfg.Clock),
 	}
 }
 
