@@ -1,0 +1,16 @@
+pkgbase = drift
+	pkgdesc = Terminal screensaver and idle visualizer with animated scenes
+	pkgver = 0.6.1
+	pkgrel = 1
+	url = https://github.com/phlx0/drift
+	arch = x86_64
+	arch = aarch64
+	license = MIT
+	makedepends = go
+	provides = drift
+	conflicts = drift-bin
+	conflicts = drift-git
+	source = drift-0.6.1.tar.gz::https://github.com/phlx0/drift/archive/refs/tags/v0.6.1.tar.gz
+	sha256sums = SKIP
+
+pkgname = drift

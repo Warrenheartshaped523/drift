@@ -1,0 +1,68 @@
+name: Update AUR
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-aur:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AUR_SSH_KEY }}" > ~/.ssh/aur
+          chmod 600 ~/.ssh/aur
+          ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
+          cat >> ~/.ssh/config <<EOF
+          Host aur.archlinux.org
+            IdentityFile ~/.ssh/aur
+            User aur
+          EOF
+
+      - name: Clone AUR package
+        run: git clone ssh://aur@aur.archlinux.org/drift-bin.git
+
+      - name: Compute checksums
+        id: meta
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION_NO_V="${VERSION#v}"
+          AMD64=$(curl -sL "https://github.com/phlx0/drift/releases/download/${VERSION}/drift_linux_amd64.tar.gz" | sha256sum | cut -d' ' -f1)
+          ARM64=$(curl -sL "https://github.com/phlx0/drift/releases/download/${VERSION}/drift_linux_arm64.tar.gz" | sha256sum | cut -d' ' -f1)
+          echo "version=${VERSION_NO_V}" >> "$GITHUB_OUTPUT"
+          echo "amd64=${AMD64}" >> "$GITHUB_OUTPUT"
+          echo "arm64=${ARM64}" >> "$GITHUB_OUTPUT"
+
+      - name: Update PKGBUILD
+        run: |
+          cd drift-bin
+          VERSION="${{ steps.meta.outputs.version }}"
+          AMD64="${{ steps.meta.outputs.amd64 }}"
+          ARM64="${{ steps.meta.outputs.arm64 }}"
+          sed -i "s/^pkgver=.*/pkgver=${VERSION}/" PKGBUILD
+          sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
+          sed -i "s/sha256sums_x86_64=('.*')/sha256sums_x86_64=('${AMD64}')/" PKGBUILD
+          sed -i "s/sha256sums_aarch64=('.*')/sha256sums_aarch64=('${ARM64}')/" PKGBUILD
+
+      - name: Update .SRCINFO
+        run: |
+          cd drift-bin
+          VERSION="${{ steps.meta.outputs.version }}"
+          AMD64="${{ steps.meta.outputs.amd64 }}"
+          ARM64="${{ steps.meta.outputs.arm64 }}"
+          sed -i "s/pkgver = .*/pkgver = ${VERSION}/" .SRCINFO
+          sed -i "s/pkgrel = .*/pkgrel = 1/" .SRCINFO
+          sed -i "s|source_x86_64 = .*|source_x86_64 = drift-bin-${VERSION}-x86_64.tar.gz::https://github.com/phlx0/drift/releases/download/v${VERSION}/drift_linux_amd64.tar.gz|" .SRCINFO
+          sed -i "s/sha256sums_x86_64 = .*/sha256sums_x86_64 = ${AMD64}/" .SRCINFO
+          sed -i "s|source_aarch64 = .*|source_aarch64 = drift-bin-${VERSION}-aarch64.tar.gz::https://github.com/phlx0/drift/releases/download/v${VERSION}/drift_linux_arm64.tar.gz|" .SRCINFO
+          sed -i "s/sha256sums_aarch64 = .*/sha256sums_aarch64 = ${ARM64}/" .SRCINFO
+
+      - name: Push to AUR
+        run: |
+          cd drift-bin
+          git config user.name "phlx0"
+          git config user.email "phlx0@users.noreply.github.com"
+          git add PKGBUILD .SRCINFO
+          git commit -m "update to ${{ github.event.release.tag_name }}"
+          git push

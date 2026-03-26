@@ -17,6 +17,7 @@ Every OS has a screensaver. The terminal had nothing — until now.
 [![Go Report Card](https://goreportcard.com/badge/github.com/phlx0/drift?style=flat-square)](https://goreportcard.com/report/github.com/phlx0/drift)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-brightgreen?style=flat-square)](https://github.com/phlx0/drift/releases)
+[![AUR](https://img.shields.io/aur/version/drift-bin?style=flat-square&label=AUR&color=1793d1)](https://aur.archlinux.org/packages/drift-bin)
 
 </div>
 
@@ -107,7 +108,13 @@ drift list themes    # preview all themes with color swatches
 
 ## Installation
 
-### Option 1 — Pre-built binary (no Go required)
+### Option 1 — AUR (Arch Linux)
+
+```bash
+yay -S drift-bin   # or: paru -S drift-bin
+```
+
+### Option 2 — Pre-built binary (no Go required)
 
 1. Go to the [Releases](https://github.com/phlx0/drift/releases) page.
 2. Download the archive for your platform:
@@ -127,7 +134,7 @@ drift list themes    # preview all themes with color swatches
    drift version
    ```
 
-### Option 2 — Go install
+### Option 3 — Go install
 
 ```bash
 go install github.com/phlx0/drift@latest
@@ -140,7 +147,7 @@ Make sure Go's bin directory is on your `PATH`:
 export PATH="$PATH:$(go env GOPATH)/bin"
 ```
 
-### Option 3 — Build from source
+### Option 4 — Build from source
 
 ```bash
 git clone https://github.com/phlx0/drift
