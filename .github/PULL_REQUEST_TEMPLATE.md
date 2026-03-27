@@ -37,3 +37,4 @@
 ## Screenshots / recording *(required for new scenes and themes)*
 
 <!-- Attach a terminal recording or screenshot. -->
+<!-- Tip: use vhs github.com/charmbracelet/vhs ;) -->
