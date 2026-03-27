@@ -204,7 +204,7 @@ drift --theme catppuccin         override the color theme
 drift --duration 30              cycle scenes every 30 seconds
 drift --showcase                 browse all scenes and themes interactively
 
-drift list scenes                list all scenes
+drift list scenes                list all available scenes
 drift list themes                list themes with color swatches
 drift shell-init zsh|bash|fish   print shell integration snippet
 drift config                     show effective configuration
@@ -273,7 +273,51 @@ speed         = 1.0
 density       = 0.35
 speed         = 1.0
 reset_seconds = 30.0
+
+[scene.clock]
+show_date = true  # show date below the time
 ```
+
+---
+
+## Showcase mode
+
+`drift --showcase` runs drift continuously — nothing exits it except `esc`. Use it to browse scenes and themes or leave it running on a visible window.
+
+| Key | Action |
+|---|---|
+| `↑` / `w` | previous scene |
+| `↓` / `s` | next scene |
+| `←` / `a` | previous theme |
+| `→` / `d` | next theme |
+| `esc` | quit |
+
+A status bar shows the current scene and theme for 3 seconds after each keypress, then fades out.
+
+---
+
+## Troubleshooting
+
+**Config changes have no effect**
+
+Run `drift config` to check whether your config file is being found:
+
+```
+Config file: /Users/you/.config/drift/config.toml (not found — using defaults; run 'drift config --init' to create it)
+```
+
+If the file is missing, create it with `drift config --init`. If it exists but changes still don't apply, check for a TOML syntax error — `drift config` will print the parse error if there is one.
+
+**drift doesn't activate automatically**
+
+Make sure the shell integration is sourced in your rc file and that `DRIFT_TIMEOUT` (or `TMOUT` in zsh) is set:
+
+```bash
+export DRIFT_TIMEOUT=120
+eval "$(drift shell-init zsh)"   # or bash / fish
+```
+
+Then open a new terminal session for it to take effect.
 
 ---
 
