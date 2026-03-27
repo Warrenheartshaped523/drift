@@ -44,3 +44,51 @@ Sleep 6s
 Enter
 
 Sleep 300ms
+
+# Pipes
+Type "drift --scene pipes --theme gruvbox --duration 0"
+Enter
+Sleep 6s
+Enter
+
+Sleep 300ms
+
+# Maze
+Type "drift --scene maze --theme wildberries --duration 0"
+Enter
+Sleep 8s
+Enter
+
+Sleep 300ms
+
+# Life
+Type "drift --scene life --theme forest --duration 0"
+Enter
+Sleep 6s
+Enter
+
+Sleep 300ms
+
+# Clock
+Type "drift --scene clock --theme rosepine --duration 0"
+Enter
+Sleep 6s
+Enter
+
+Sleep 300ms
+
+# Showcase
+Type "drift --showcase --theme cosmic"
+Enter
+Sleep 3s
+Down
+Sleep 2s
+Down
+Sleep 2s
+Right
+Sleep 2s
+Right
+Sleep 2s
+Escape
+
+Sleep 300ms
