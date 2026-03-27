@@ -26,6 +26,9 @@ type EngineConfig struct {
 	Shuffle bool   `toml:"shuffle"`
 	// runs `tmux set status off` while drift runs when inside tmux.
 	HideTmuxStatus bool `toml:"hide_tmux_status"`
+	// Showcase keeps running continuously; arrow/wasd keys cycle scenes and
+	// themes, Escape exits.
+	Showcase bool `toml:"showcase"`
 }
 
 type SceneConfig struct {
