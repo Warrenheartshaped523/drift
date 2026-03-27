@@ -16,7 +16,7 @@ Every OS has a screensaver. The terminal had nothing — until now.
 [![CI](https://img.shields.io/github/actions/workflow/status/phlx0/drift/ci.yml?style=flat-square&label=ci)](https://github.com/phlx0/drift/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/phlx0/drift?style=flat-square)](https://goreportcard.com/report/github.com/phlx0/drift)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-brightgreen?style=flat-square)](https://github.com/phlx0/drift/releases)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-brightgreen?style=flat-square)](https://github.com/phlx0/drift/releases)
 [![AUR](https://img.shields.io/aur/version/drift-bin?style=flat-square&label=AUR&color=1793d1)](https://aur.archlinux.org/packages/drift-bin)
 
 </div>
@@ -130,6 +130,7 @@ yay -S drift-bin   # or: paru -S drift-bin
    | macOS | Intel | `drift_darwin_amd64.tar.gz` |
    | Linux | x86-64 | `drift_linux_amd64.tar.gz` |
    | Linux | ARM64 | `drift_linux_arm64.tar.gz` |
+   | Windows | x86-64 | `drift_windows_amd64.zip` |
 
 3. Extract and move it somewhere on your `PATH`:
 
@@ -192,6 +193,10 @@ eval "$(drift shell-init bash)"
 set -x DRIFT_TIMEOUT 120   # seconds of inactivity (default: 120)
 drift shell-init fish | source
 ```
+
+### Windows
+
+Shell integration is not available on Windows. Run `drift` directly from any terminal (Windows Terminal, PowerShell, cmd) to start it immediately, or use `drift --showcase` to browse interactively. Press `esc` to exit.
 
 ---
 
