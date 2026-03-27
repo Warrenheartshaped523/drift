@@ -199,17 +199,25 @@ func init() {
 }
 
 func showConfig() error {
+	path, _ := config.Path() //nolint:errcheck
+
 	cfg, err := config.Load()
 	if err != nil {
-		return err
+		fmt.Fprintf(os.Stderr, "Config file: %s\n", path)
+		return fmt.Errorf("failed to parse config: %w", err)
 	}
-	path, _ := config.Path() //nolint:errcheck
-	fmt.Printf("Config file: %s\n\n", path)
-	fmt.Printf("theme:         %s\n", cfg.Engine.Theme)
-	fmt.Printf("fps:           %d\n", cfg.Engine.FPS)
-	fmt.Printf("cycle_seconds: %.0f\n", cfg.Engine.CycleSeconds)
-	fmt.Printf("scenes:        %s\n", cfg.Engine.Scenes)
-	fmt.Printf("shuffle:       %v\n", cfg.Engine.Shuffle)
+
+	if _, statErr := os.Stat(path); os.IsNotExist(statErr) {
+		fmt.Printf("Config file: %s (not found — using defaults; run 'drift config --init' to create it)\n\n", path)
+	} else {
+		fmt.Printf("Config file: %s\n\n", path)
+	}
+
+	fmt.Printf("theme:            %s\n", cfg.Engine.Theme)
+	fmt.Printf("fps:              %d\n", cfg.Engine.FPS)
+	fmt.Printf("cycle_seconds:    %.0f\n", cfg.Engine.CycleSeconds)
+	fmt.Printf("scenes:           %s\n", cfg.Engine.Scenes)
+	fmt.Printf("shuffle:          %v\n", cfg.Engine.Shuffle)
 	fmt.Printf("hide_tmux_status: %v\n", cfg.Engine.HideTmuxStatus)
 	return nil
 }
