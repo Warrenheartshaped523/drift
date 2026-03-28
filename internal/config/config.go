@@ -36,6 +36,7 @@ type SceneConfig struct {
 	Rain          RainConfig          `toml:"rain"`
 	Particles     ParticlesConfig     `toml:"particles"`
 	Waveform      WaveformConfig      `toml:"waveform"`
+	Orrery        OrreryConfig        `toml:"orrery"`
 	Pipes         PipesConfig         `toml:"pipes"`
 	Maze          MazeConfig          `toml:"maze"`
 	Life          LifeConfig          `toml:"life"`
@@ -69,6 +70,11 @@ type WaveformConfig struct {
 	Layers    int     `toml:"layers"`
 	Amplitude float64 `toml:"amplitude"` // 0.0–1.0
 	Speed     float64 `toml:"speed"`     // multiplier
+}
+
+type OrreryConfig struct {
+	Bodies     int     `toml:"bodies"`
+	TrailDecay float64 `toml:"trail_decay"`
 }
 
 type PipesConfig struct {
@@ -120,6 +126,10 @@ func Default() *Config {
 				Layers:    3,
 				Amplitude: 0.70,
 				Speed:     1.0,
+			},
+			Orrery: OrreryConfig{
+				Bodies:     8,
+				TrailDecay: 2.4,
 			},
 			Pipes: PipesConfig{
 				Heads:        6,
@@ -246,6 +256,10 @@ friction = 0.98
 layers    = 3
 amplitude = 0.70
 speed     = 1.0
+
+[scene.orrery]
+bodies      = 8    # clamped to at least 4 for readability
+trail_decay = 2.4
 
 [scene.pipes]
 heads         = 6
