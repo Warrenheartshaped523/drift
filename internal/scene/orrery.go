@@ -97,7 +97,7 @@ func (o *Orrery) Init(w, h int, t Theme) {
 	o.pw, o.ph = w*2, h*4
 	o.theme = t
 	o.time = 0
-	o.rng = rand.New(rand.NewSource(int64(w*91841 ^ h*69457 ^ 0x77a31)))
+	o.rng = rand.New(rand.NewSource(int64(w)*91841 ^ int64(h)*69457 ^ 0x77a31))
 	o.centerX = float64(max(o.pw-1, 0)) / 2
 	o.centerY = float64(max(o.ph-1, 0)) / 2
 	o.allocBuffers()
@@ -114,7 +114,7 @@ func (o *Orrery) Resize(w, h int) {
 
 	o.w, o.h = w, h
 	o.pw, o.ph = w*2, h*4
-	o.rng = rand.New(rand.NewSource(int64(w*91841 ^ h*69457 ^ 0x77a31)))
+	o.rng = rand.New(rand.NewSource(int64(w)*91841 ^ int64(h)*69457 ^ 0x77a31))
 	o.centerX = float64(max(o.pw-1, 0)) / 2
 	o.centerY = float64(max(o.ph-1, 0)) / 2
 	o.allocBuffers()
@@ -151,7 +151,6 @@ func (o *Orrery) Update(dt float64) {
 		body := &o.bodies[i]
 		body.angle += body.speed * dt
 		body.x, body.y = o.pointOnOrbit(body.radius, body.angle)
-		o.stampTrail(body)
 	}
 
 	o.updateAsteroid(dt)
@@ -194,7 +193,7 @@ func (o *Orrery) pointOnOrbit(radius, angle float64) (float64, float64) {
 	return o.centerX + radius*math.Cos(angle), o.centerY + radius*math.Sin(angle)
 }
 
-func pointSegmentDistance(px, py, x1, y1, x2, y2 float64) float64 {
+func orreryPointSegmentDistance(px, py, x1, y1, x2, y2 float64) float64 {
 	dx := x2 - x1
 	dy := y2 - y1
 	den := dx*dx + dy*dy
@@ -209,7 +208,7 @@ func pointSegmentDistance(px, py, x1, y1, x2, y2 float64) float64 {
 	return math.Hypot(px-sx, py-sy)
 }
 
-func segmentCircleHit(x1, y1, x2, y2, cx, cy, r float64) (bool, float64) {
+func orrerySegmentCircleHit(x1, y1, x2, y2, cx, cy, r float64) (bool, float64) {
 	dx := x2 - x1
 	dy := y2 - y1
 	fx := x1 - cx
@@ -336,7 +335,7 @@ func (o *Orrery) buildStars() {
 		return
 	}
 
-	seed := int64(o.w*44549 ^ o.h*98317 ^ 0x45a11)
+	seed := int64(o.w)*44549 ^ int64(o.h)*98317 ^ 0x45a11
 	rng := rand.New(rand.NewSource(seed))
 	count := max((o.w*o.h)/90, 36)
 	stars := make([]orreryStar, 0, count)
@@ -375,7 +374,7 @@ func (o *Orrery) buildStars() {
 
 func (o *Orrery) buildBodies() {
 	count := o.effectiveBodyCount()
-	seed := int64(o.w*73856093 ^ o.h*19349663 ^ count*83492791)
+	seed := int64(o.w)*73856093 ^ int64(o.h)*19349663 ^ int64(count)*83492791
 	rng := rand.New(rand.NewSource(seed))
 
 	maxRadius := math.Min(float64(o.pw)*0.26, float64(o.ph)*0.26)
@@ -471,7 +470,7 @@ func (o *Orrery) spawnAsteroid() {
 		for _, sign := range []float64{-1, 1} {
 			candidateX := flybyX + tangentX*lead*sign
 			candidateY := flybyY + tangentY*lead*sign
-			miss := pointSegmentDistance(o.centerX, o.centerY, x, y, candidateX, candidateY)
+			miss := orreryPointSegmentDistance(o.centerX, o.centerY, x, y, candidateX, candidateY)
 			if miss < minMissDistance {
 				continue
 			}
@@ -586,7 +585,7 @@ func (o *Orrery) updateAsteroid(dt float64) {
 		nextX := currX + o.asteroid.vx*stepDT
 		nextY := currY + o.asteroid.vy*stepDT
 
-		if hit, t := segmentCircleHit(currX, currY, nextX, nextY, o.centerX, o.centerY, safeRadius); hit {
+		if hit, t := orrerySegmentCircleHit(currX, currY, nextX, nextY, o.centerX, o.centerY, safeRadius); hit {
 			hitX := currX + (nextX-currX)*t
 			hitY := currY + (nextY-currY)*t
 			nx := hitX - o.centerX
@@ -744,10 +743,6 @@ func (o *Orrery) drawOrbits() {
 			o.stampPixel(int(x+0.5), int(y+0.5), orreryOrbitOwner, 0.16)
 		}
 	}
-}
-
-func (o *Orrery) stampTrail(body *orreryBody) {
-	_ = body
 }
 
 func (o *Orrery) drawSun() {

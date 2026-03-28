@@ -148,7 +148,7 @@ func TestOrrerySpawnAsteroidProducesFlybyVelocity(t *testing.T) {
 		spawned = true
 
 		speed := math.Hypot(o.asteroid.vx, o.asteroid.vy)
-		if speed <= 0.01 {
+		if speed < 14.0 {
 			t.Fatalf("spawnAsteroid produced degenerate velocity on iteration %d: vx=%f vy=%f", i, o.asteroid.vx, o.asteroid.vy)
 		}
 	}
