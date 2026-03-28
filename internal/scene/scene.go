@@ -38,6 +38,7 @@ func All(cfgs ...config.SceneConfig) []Scene {
 		NewRain(cfg.Rain),
 		NewParticles(cfg.Particles),
 		NewWaveform(cfg.Waveform),
+		NewOrrery(cfg.Orrery),
 		NewPipes(cfg.Pipes),
 		NewMaze(cfg.Maze),
 		NewLife(cfg.Life),

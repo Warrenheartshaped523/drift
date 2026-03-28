@@ -29,7 +29,7 @@ Every OS has a screensaver. The terminal had nothing — until now.
 
 ## Scenes
 
-drift ships eight animations. They cycle automatically or you can lock to one.
+drift ships nine animations. They cycle automatically or you can lock to one.
 
 <table>
 <tr>
@@ -93,6 +93,18 @@ drift ships eight animations. They cycle automatically or you can lock to one.
 **clock** — current time in large braille digits, styled in the active theme, with the date below
 
 <img src="demo/clock.gif" width="100%" />
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**orrery** — a stylized solar system with a fixed sun, concentric orbit rings, and braille-rendered planets
+
+<img src="demo/orrery.gif" width="100%" />
+
+</td>
+<td width="50%">
 
 </td>
 </tr>
@@ -262,6 +274,10 @@ friction = 0.98
 layers    = 3
 amplitude = 0.70
 speed     = 1.0
+
+[scene.orrery]
+bodies      = 8    # clamped to at least 4 for readability
+trail_decay = 2.4
 
 [scene.pipes]
 heads         = 6
