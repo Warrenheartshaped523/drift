@@ -13,6 +13,11 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - **starfield** scene — classic 3-D star warp; stars spawn near the centre, accelerate toward the viewer and fan out to the edges; close stars flash bright and leave a one-cell trail; configurable via `[scene.starfield]`: `count`, `speed`
 
+### Changed
+
+- **scene package structure** — each scene now lives in its own subdirectory and Go package (`internal/scene/rain`, `internal/scene/orrery`, etc.); the orrery is split across `orrery.go`, `bodies.go`, `effects.go`, and `render.go`; scene registration moved to a new `internal/scenes` package to avoid circular imports
+- **contributing guide and PR template** updated to reflect the new scene package structure and registration steps
+
 ---
 
 ## [0.9.0] — 2026-03-29
