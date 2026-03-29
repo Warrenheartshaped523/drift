@@ -41,6 +41,12 @@ type SceneConfig struct {
 	Maze          MazeConfig          `toml:"maze"`
 	Life          LifeConfig          `toml:"life"`
 	Clock         ClockConfig         `toml:"clock"`
+	Starfield     StarfieldConfig     `toml:"starfield"`
+}
+
+type StarfieldConfig struct {
+	Count int     `toml:"count"` // number of stars
+	Speed float64 `toml:"speed"` // warp speed multiplier
 }
 
 type ClockConfig struct {
@@ -149,6 +155,10 @@ func Default() *Config {
 			},
 			Clock: ClockConfig{
 				ShowDate: true,
+			},
+			Starfield: StarfieldConfig{
+				Count: 200,
+				Speed: 1.0,
 			},
 		},
 	}
@@ -279,4 +289,8 @@ reset_seconds = 30.0  # seconds before forced reset
 
 [scene.clock]
 show_date = true  # show date below the time
+
+[scene.starfield]
+count = 200   # number of stars
+speed = 1.0   # warp speed multiplier
 `

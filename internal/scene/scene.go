@@ -43,6 +43,7 @@ func All(cfgs ...config.SceneConfig) []Scene {
 		NewMaze(cfg.Maze),
 		NewLife(cfg.Life),
 		NewClock(cfg.Clock),
+		NewStarfield(cfg.Starfield),
 	}
 }
 

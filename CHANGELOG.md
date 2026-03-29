@@ -9,6 +9,10 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **starfield** scene — classic 3-D star warp; stars spawn near the centre, accelerate toward the viewer and fan out to the edges; close stars flash bright and leave a one-cell trail; configurable via `[scene.starfield]`: `count`, `speed`
+
 ---
 
 ## [0.9.0] — 2026-03-29

@@ -29,7 +29,7 @@ Every OS has a screensaver. The terminal had nothing — until now.
 
 ## Scenes
 
-drift ships nine animations. They cycle automatically or you can lock to one.
+drift ships ten animations. They cycle automatically or you can lock to one.
 
 <table>
 <tr>
@@ -105,6 +105,10 @@ drift ships nine animations. They cycle automatically or you can lock to one.
 
 </td>
 <td width="50%">
+
+**starfield** — classic 3-D star warp; stars accelerate toward you from the centre, brightening and leaving trails as they approach
+
+<img src="demo/starfield.gif" width="100%" />
 
 </td>
 </tr>
