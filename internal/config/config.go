@@ -21,6 +21,9 @@ type EngineConfig struct {
 	FPS int `toml:"fps"`
 	// CycleSeconds is how long to show each scene before cycling. 0 disables cycling.
 	CycleSeconds float64 `toml:"cycle_seconds"`
+	// FadeSeconds is the duration of the fade-to-black transition between scenes.
+	// 0 disables the transition (instant cut).
+	FadeSeconds float64 `toml:"fade_seconds"`
 	// Scenes is a comma-separated list of scene names, or "all".
 	Scenes  string `toml:"scenes"`
 	Theme   string `toml:"theme"`
@@ -108,6 +111,7 @@ func Default() *Config {
 		Engine: EngineConfig{
 			FPS:          30,
 			CycleSeconds: 60,
+			FadeSeconds:  0.3,
 			Scenes:       "all",
 			Theme:        "cosmic",
 			Shuffle:      true,
@@ -203,6 +207,9 @@ func (c *Config) Validate() error {
 	}
 	if c.Engine.CycleSeconds < 0 {
 		errs = append(errs, fmt.Sprintf("engine.cycle_seconds must be >= 0, got %.1f", c.Engine.CycleSeconds))
+	}
+	if c.Engine.FadeSeconds < 0 {
+		errs = append(errs, fmt.Sprintf("engine.fade_seconds must be >= 0, got %.2f", c.Engine.FadeSeconds))
 	}
 
 	// constellation
@@ -357,6 +364,7 @@ const defaultTOML = `# drift configuration
 [engine]
 fps           = 30     # target frames per second
 cycle_seconds = 60     # seconds per scene, 0 = stay on one scene
+fade_seconds  = 0.3   # fade-to-black duration between scenes, 0 = instant cut
 scenes        = "all"  # comma-separated list or "all"
 theme         = "cosmic" # cosmic | nord | dracula | catppuccin | gruvbox | forest | wildberries | mono | rosepine
 shuffle       = true   # randomise scene order

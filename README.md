@@ -253,6 +253,7 @@ drift config --init   # writes ~/.config/drift/config.toml
 [engine]
 fps              = 30
 cycle_seconds    = 60    # 0 = stay on one scene
+fade_seconds     = 0.3   # fade-to-black between scenes, 0 = instant cut
 scenes           = "all"
 theme            = "cosmic"
 shuffle          = true

@@ -32,6 +32,40 @@ func (s *shiftScreen) SetContent(x, y int, main rune, comb []rune, style tcell.S
 	}
 }
 
+// fadeScreen wraps tcell.Screen and darkens every RGB foreground color by
+// alpha (0.0 = no change, 1.0 = fully black). Non-RGB colors pass through
+// unchanged.
+type fadeScreen struct {
+	tcell.Screen
+	alpha float64
+}
+
+func (f *fadeScreen) SetContent(x, y int, main rune, comb []rune, style tcell.Style) {
+	if f.alpha >= 1.0 {
+		return
+	}
+	if f.alpha > 0 {
+		fg, _, _ := style.Decompose()
+		if hex := fg.Hex(); hex >= 0 {
+			t := 1.0 - f.alpha
+			style = style.Foreground(tcell.NewRGBColor(
+				int32(float64((hex>>16)&0xFF)*t),
+				int32(float64((hex>>8)&0xFF)*t),
+				int32(float64(hex&0xFF)*t),
+			))
+		}
+	}
+	f.Screen.SetContent(x, y, main, comb, style)
+}
+
+type transitionPhase int
+
+const (
+	transitionNone    transitionPhase = iota
+	transitionFadeOut                 // current scene dims to black
+	transitionFadeIn                  // new scene brightens from black
+)
+
 type Engine struct {
 	cfg config.Config
 
@@ -48,6 +82,11 @@ type Engine struct {
 	themeNames []string // sorted theme names
 	themeIdx   int      // index into themeNames
 	hudTimer   float64  // seconds remaining to show the HUD overlay
+
+	// transition
+	transition     transitionPhase
+	transitionT    float64 // elapsed time in current phase
+	transitionNext int     // scene index to switch to at fade-out completion
 }
 
 func New(cfg config.Config) *Engine {
@@ -223,15 +262,26 @@ func (e *Engine) handleShowcaseEvent(ev tcell.Event, screen tcell.Screen, w, h *
 }
 
 func (e *Engine) nextScene(w, h int) {
-	e.cur = (e.cur + 1) % len(e.scenes)
-	e.sceneAge = 0
-	e.scenes[e.cur].Init(w, h, e.theme)
+	e.beginTransition((e.cur+1)%len(e.scenes), w, h)
 }
 
 func (e *Engine) prevScene(w, h int) {
-	e.cur = (e.cur - 1 + len(e.scenes)) % len(e.scenes)
+	e.beginTransition((e.cur-1+len(e.scenes))%len(e.scenes), w, h)
+}
+
+// beginTransition starts a fade-out toward next, or switches instantly when
+// fade_seconds = 0 or a transition is already in progress.
+func (e *Engine) beginTransition(next, w, h int) {
+	if e.cfg.Engine.FadeSeconds <= 0 || e.transition != transitionNone {
+		e.cur = next
+		e.sceneAge = 0
+		e.scenes[e.cur].Init(w, h, e.theme)
+		return
+	}
 	e.sceneAge = 0
-	e.scenes[e.cur].Init(w, h, e.theme)
+	e.transitionNext = next
+	e.transition = transitionFadeOut
+	e.transitionT = 0
 }
 
 func (e *Engine) nextTheme(w, h int) {
@@ -303,12 +353,38 @@ func (e *Engine) handleTick(dt float64, screen tcell.Screen, w, h *int) {
 		}
 	}
 
+	// Advance transition state machine.
+	if e.transition != transitionNone {
+		e.transitionT += dt
+		dur := e.cfg.Engine.FadeSeconds
+		switch e.transition {
+		case transitionFadeOut:
+			if e.transitionT >= dur {
+				e.cur = e.transitionNext
+				e.sceneAge = 0
+				*w, *h = screen.Size()
+				e.scenes[e.cur].Init(*w, *h, e.theme)
+				e.transitionT = 0
+				e.transition = transitionFadeIn
+			}
+		case transitionFadeIn:
+			if e.transitionT >= dur {
+				e.transitionT = 0
+				e.transition = transitionNone
+			}
+		}
+	}
+
 	cur := e.scenes[e.cur]
 	cur.Update(dt)
 
 	shifted := &shiftScreen{Screen: screen, ox: e.shiftOX, oy: e.shiftOY}
 	screen.Fill(' ', tcell.StyleDefault)
-	cur.Draw(shifted)
+	var drawTarget tcell.Screen = shifted
+	if alpha := e.fadeAlpha(); alpha > 0 {
+		drawTarget = &fadeScreen{Screen: shifted, alpha: alpha}
+	}
+	cur.Draw(drawTarget)
 
 	if e.cfg.Engine.Showcase {
 		if e.hudTimer > 0 {
@@ -321,13 +397,26 @@ func (e *Engine) handleTick(dt float64, screen tcell.Screen, w, h *int) {
 
 	if !e.cfg.Engine.Showcase && e.cfg.Engine.CycleSeconds > 0 && len(e.scenes) > 1 {
 		e.sceneAge += dt
-		if e.sceneAge >= e.cfg.Engine.CycleSeconds {
-			e.sceneAge = 0
-			e.cur = (e.cur + 1) % len(e.scenes)
-			*w, *h = screen.Size()
-			e.scenes[e.cur].Init(*w, *h, e.theme)
+		if e.sceneAge >= e.cfg.Engine.CycleSeconds && e.transition == transitionNone {
+			e.beginTransition((e.cur+1)%len(e.scenes), *w, *h)
 		}
 	}
+}
+
+// fadeAlpha returns the current fade overlay opacity (0 = fully visible,
+// 1 = fully black) based on transition phase and progress.
+func (e *Engine) fadeAlpha() float64 {
+	dur := e.cfg.Engine.FadeSeconds
+	if dur <= 0 {
+		return 0
+	}
+	switch e.transition {
+	case transitionFadeOut:
+		return e.transitionT / dur
+	case transitionFadeIn:
+		return 1.0 - e.transitionT/dur
+	}
+	return 0
 }
 
 func (e *Engine) buildScenes() []scene.Scene {
