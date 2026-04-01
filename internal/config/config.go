@@ -16,9 +16,9 @@ import (
 )
 
 type Config struct {
-	Engine EngineConfig                  `toml:"engine"`
-	Scene  SceneConfig                   `toml:"scene"`
-	Theme  map[string]CustomThemeConfig  `toml:"theme"`
+	Engine EngineConfig                 `toml:"engine"`
+	Scene  SceneConfig                  `toml:"scene"`
+	Theme  map[string]CustomThemeConfig `toml:"theme"`
 }
 
 // CustomThemeConfig defines a user-supplied theme in config.toml.
