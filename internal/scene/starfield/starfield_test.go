@@ -67,11 +67,9 @@ func TestStarfieldUpdateAdvancesZ(t *testing.T) {
 
 	z0 := s.stars[0].z
 	s.Update(0.1)
-	// z should have decreased (star moves toward viewer).
-	if s.stars[0].z >= z0 {
-		// Star may have respawned if it hit z<=0.01, which is also valid behavior.
-		// Just check it didn't panic.
-	}
+	// z should have decreased or the star respawned (z resets to ~1 on respawn).
+	// Either outcome is valid; we only verify no panic occurred.
+	_ = z0
 }
 
 func TestStarfieldSmallTerminalDoesNotPanic(t *testing.T) {
