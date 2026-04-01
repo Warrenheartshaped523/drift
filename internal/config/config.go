@@ -364,9 +364,9 @@ hide_tmux_status = false  # tmux: hide status bar while displaying scene
 
 [scene.constellation]
 star_count      = 80
-connect_radius  = 0.18  # fraction of screen diagonal
-twinkle         = true
-max_connections = 4     # max connections per star
+connect_radius  = 0.18  # connection threshold as a fraction of screen diagonal (0.0–1.0)
+twinkle         = true  # animate star brightness; false = steady glow
+max_connections = 4     # max lines drawn from each star
 
 [scene.rain]
 charset = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ0123456789"
@@ -375,17 +375,17 @@ speed   = 1.0
 
 [scene.particles]
 count    = 120
-gravity  = 0.0
-friction = 0.98
+gravity  = 0.0   # downward acceleration in cells/s²; negative pulls upward
+friction = 0.98  # velocity damping per frame (0.0 = instant stop, 1.0 = no damping)
 
 [scene.waveform]
-layers    = 3
+layers    = 3    # number of overlapping sine waves (1–3)
 amplitude = 0.70
 speed     = 1.0
 
 [scene.orrery]
-bodies      = 8    # clamped to at least 4 for readability
-trail_decay = 2.4
+bodies      = 8    # number of planets (4–8)
+trail_decay = 2.4  # seconds for orbit trails to fade; lower = shorter trails
 
 [scene.pipes]
 heads         = 6
