@@ -46,6 +46,12 @@ type SceneConfig struct {
 	Life          LifeConfig          `toml:"life"`
 	Clock         ClockConfig         `toml:"clock"`
 	Starfield     StarfieldConfig     `toml:"starfield"`
+	DVD           DVDConfig           `toml:"dvd"`
+}
+
+type DVDConfig struct {
+	Speed float64 `toml:"speed"` // movement speed multiplier
+	Label string  `toml:"label"` // text displayed inside the bouncing logo
 }
 
 type StarfieldConfig struct {
@@ -164,6 +170,10 @@ func Default() *Config {
 			Starfield: StarfieldConfig{
 				Count: 200,
 				Speed: 1.0,
+			},
+			DVD: DVDConfig{
+				Speed: 1.0,
+				Label: "drift",
 			},
 		},
 	}
@@ -302,6 +312,11 @@ func (c *Config) Validate() error {
 		errs = append(errs, fmt.Sprintf("scene.starfield.speed must be > 0, got %.2f", s))
 	}
 
+	// dvd
+	if s := c.Scene.DVD.Speed; s <= 0 {
+		errs = append(errs, fmt.Sprintf("scene.dvd.speed must be > 0, got %.2f", s))
+	}
+
 	if len(errs) > 0 {
 		return fmt.Errorf("config validation failed:\n  %s", strings.Join(errs, "\n  "))
 	}
@@ -417,4 +432,8 @@ show_date = true  # show date below the time
 [scene.starfield]
 count = 200   # number of stars
 speed = 1.0   # warp speed multiplier
+
+[scene.dvd]
+speed = 1.0     # movement speed multiplier
+label = "drift" # text displayed inside the bouncing logo
 `

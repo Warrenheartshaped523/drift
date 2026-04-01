@@ -29,7 +29,7 @@ Every OS has a screensaver. The terminal had nothing — until now.
 
 ## Scenes
 
-drift ships ten animations. They cycle automatically or you can lock to one.
+drift ships eleven animations. They cycle automatically or you can lock to one.
 
 <table>
 <tr>
@@ -110,6 +110,15 @@ drift ships ten animations. They cycle automatically or you can lock to one.
 
 <img src="demo/starfield.gif" width="100%" />
 
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**dvd** — the classic bouncing logo; changes palette color on each wall bounce and flashes bright on a corner hit
+
+</td>
+<td width="50%">
 </td>
 </tr>
 </table>
@@ -304,8 +313,12 @@ reset_seconds = 30.0
 show_date = true  # show date below the time
 
 [scene.starfield]
-count = 200 # number of stars
-speed = 1.0 # warp speed multiplier
+count = 200   # number of stars
+speed = 1.0   # warp speed multiplier
+
+[scene.dvd]
+speed = 1.0     # movement speed multiplier
+label = "drift" # text displayed inside the bouncing logo
 ```
 
 ---

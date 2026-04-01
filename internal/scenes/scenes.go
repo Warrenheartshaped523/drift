@@ -5,6 +5,7 @@ import (
 	"github.com/phlx0/drift/internal/scene"
 	"github.com/phlx0/drift/internal/scene/clock"
 	"github.com/phlx0/drift/internal/scene/constellation"
+	"github.com/phlx0/drift/internal/scene/dvd"
 	"github.com/phlx0/drift/internal/scene/life"
 	"github.com/phlx0/drift/internal/scene/maze"
 	"github.com/phlx0/drift/internal/scene/orrery"
@@ -27,6 +28,7 @@ func All(cfg config.SceneConfig) []scene.Scene {
 		life.New(cfg.Life),
 		clock.New(cfg.Clock),
 		starfield.New(cfg.Starfield),
+		dvd.New(cfg.DVD),
 	}
 }
 

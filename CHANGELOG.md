@@ -11,6 +11,7 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **dvd** scene — the classic bouncing logo; a rounded box drifts around the terminal, changing palette color on each wall bounce and flashing bright on a corner hit; configurable via `[scene.dvd]`: `speed`, `label`
 - **scene transitions** — a smooth fade-to-black between scene switches; duration controlled by `engine.fade_seconds` (default `0.3`s per phase, `0` = instant cut); applies to both automatic cycling and showcase navigation
 - **config validation** — `Load()` now rejects out-of-range values for all numeric config fields with a clear multi-line error listing every invalid field
 - **config validation** — `scene.waveform.layers` must be 1–3; `scene.particles.friction` must be 0.0–1.0
