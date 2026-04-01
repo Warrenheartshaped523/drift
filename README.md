@@ -117,6 +117,8 @@ drift ships eleven animations. They cycle automatically or you can lock to one.
 
 **dvd** — the classic bouncing logo; changes palette color on each wall bounce and flashes bright on a corner hit
 
+<img src="demo/dvd.gif" width="100%" />
+
 </td>
 <td width="50%">
 </td>
