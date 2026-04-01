@@ -12,7 +12,9 @@ drift uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - **config validation** — `Load()` now rejects out-of-range values for all numeric config fields with a clear multi-line error listing every invalid field
+- **config validation** — `scene.waveform.layers` must be 1–3; `scene.particles.friction` must be 0.0–1.0
 - **shell snippet tests** — unit tests covering `shellSnippet()` for all supported shells and unsupported-shell error paths
+- **scene unit tests** — test coverage for all 9 scenes: `waveform`, `rain`, `constellation`, `life`, `maze`, `pipes`, `clock`, `starfield`, `particles`
 
 ### Fixed
 
